@@ -72,8 +72,14 @@ class Vector<T> {
         }
         // 复制数组
         if (arg1 instanceof Array) {
-            for (let i = 0; i < arg1.length; i++) this.put(arg1[i])
+            for (let i = 0; i < arg1.length; i++) this.add(arg1[i])
         }
+    }
+
+    protected add(e: T) {
+        this.expand()
+        this._elem[this._size] = e
+        this._size++
     }
 
     // 打印使用
@@ -87,11 +93,10 @@ class Vector<T> {
         return this._elem[r]
     }
 
-    // 添加元素
-    put(e: T) {
-        this.expand()
-        this._elem[this._size] = e
-        this._size++
+    // 在指定位置之后替换元素
+    put(r: Rank, e: T) {
+        this.assertOutOfBounds(r)
+        this._elem[r] = e
     }
 
     // 在指定位置之后插入元素
@@ -101,12 +106,6 @@ class Vector<T> {
         for (let i = this._size; i > r; i--) this._elem[i] = this._elem[i - 1]
         this._elem[r] = e
         this._size++
-    }
-
-    // 在指定位置替换元素
-    replace(r: Rank, e: T) {
-        this.assertOutOfBounds(r)
-        this._elem[r] = e
     }
 
     // 删除指定位置的元素
