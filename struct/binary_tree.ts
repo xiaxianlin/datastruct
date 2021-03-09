@@ -1,4 +1,14 @@
-import { trvaIn_R, trvaPost_R, trvaPre_R } from '../algorithm/binary_tree'
+import {
+    travIn_I1,
+    travIn_I2,
+    travIn_I3,
+    travIn_R,
+    travLevel,
+    travPost_I,
+    travPost_R,
+    travPre_I2,
+    travPre_R
+} from '../algorithm/binary_tree'
 import { RBColor, VST } from '../common/types'
 /**
  * 高度
@@ -84,20 +94,89 @@ export class BinNode<T> {
         return rc
     }
     // 取当前节点的后继节点
-    succ() {}
+    succ() {
+        let s: BinNode<T> = this
+        // 若有右子节点，则直接后继必在右子树中
+        if (this.rc) {
+            s = this.rc // 右子树
+            while (s.hasLChild()) s = s.lc // 取最左（最小）的节点
+        }
+        // 否则，直接后继应是“将当前节点包含于其左子树中的最低祖先”
+        else {
+            while (s.isRChild()) s = s.parent // 逆向地沿右向分支，不断的朝左上方移动
+            s = s.parent // 最后一步再朝右上方移动一步，即抵达直接后续（若存在）
+        }
+        return s
+    }
     // 子树层次遍历
-    travLevel(visit: VST<T>) {}
+    travLevel(visit: VST<T>) {
+        let data = []
+        travLevel(this, (e) => {
+            data.push(e)
+            visit(e)
+        })
+        console.log('[level] data :', data.join(', '))
+    }
     // 子树先序遍历
     travPre(visit: VST<T>) {
-        trvaPre_R(this, visit)
+        let rData = []
+        travPre_R(this, (e) => {
+            rData.push(e)
+            visit(e)
+        })
+        console.log('[pre] rData :', rData.join(', '))
+
+        let iData = []
+        travPre_I2(this, (e) => {
+            iData.push(e)
+            visit(e)
+        })
+        console.log('[pre] iData :', iData.join(', '))
     }
     // 子树中序遍历
     travIn(visit: VST<T>) {
-        trvaIn_R(this, visit)
+        let rData = []
+        travIn_R(this, (e) => {
+            rData.push(e)
+            visit(e)
+        })
+        console.log('[in] rData :', rData.join(', '))
+
+        let i1Data = []
+        travIn_I1(this, (e) => {
+            i1Data.push(e)
+            visit(e)
+        })
+        console.log('[in] i1Data :', i1Data.join(', '))
+
+        let i2Data = []
+        travIn_I2(this, (e) => {
+            i2Data.push(e)
+            visit(e)
+        })
+        console.log('[in] i2Data :', i2Data.join(', '))
+
+        let i3Data = []
+        travIn_I3(this, (e) => {
+            i3Data.push(e)
+            visit(e)
+        })
+        console.log('[in] i3Data :', i3Data.join(', '))
     }
     // 子树后序遍历
     travPost(visit: VST<T>) {
-        trvaPost_R(this, visit)
+        let rData = []
+        travPost_R(this, (e) => {
+            rData.push(e)
+            visit(e)
+        })
+        console.log('[post] rData :', rData.join(', '))
+        let iData = []
+        travPost_I(this, (e) => {
+            iData.push(e)
+            visit(e)
+        })
+        console.log('[post] iData :', iData.join(', '))
     }
     // 与本节点比较，-1是小于本节点，0是等于本节点，1是大于本节点
     compare(node: BinNode<T>) {
@@ -274,6 +353,15 @@ class BinTree<T> {
     }
     // 比较
     compare(t: BinTree<T>) {}
+    // 是否是完全二叉树
+    isCompleteBinTree() {
+        let h = this._root.height
+        return this._size >= Math.pow(2, h) && this._size <= Math.pow(2, h + 1) - 1
+    }
+    // 是否是满二叉树
+    isFullBinTree() {
+        return this._size === Math.pow(2, this._root.height + 1) - 1
+    }
 }
 
 export default BinTree

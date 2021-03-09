@@ -3,6 +3,7 @@ import { insertionSort, selectionSort } from './algorithm/sort'
 import { convert, evaluate, labyrinth, paren, placeQueens } from './algorithm/stack'
 import { displayLaby, randLaby } from './utils/laby'
 import BinTree from './struct/binary_tree'
+import Bitmap from './common/bitmap'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -67,12 +68,16 @@ function testBinTreeTraversal() {
     // 第三层
     let n1248 = tree.insertAsLC(n124, 8)
     let n1249 = tree.insertAsRC(n124, 9)
+    // 第四层
+    let n124910 = tree.insertAsLC(n1249, 10)
+    let n124911 = tree.insertAsRC(n1249, 11)
 
-    // tree.travPre((e) => console.log(e))
-    console.log('in')
-    tree.travIn((e) => console.log(e))
-    console.log('post')
-    tree.travPost((e) => console.log(e))
+    // tree.travPre((e) => {})
+    // tree.travIn((e) => {})
+    // tree.travPost((e) => {})
+    // tree.travLevel((e) => {})
+    console.log('isCompleteBinTree', tree.isCompleteBinTree())
+    console.log('isFullBinTree', tree.isFullBinTree())
 }
 
-testBinTreeTraversal()
+// testBinTreeTraversal()
