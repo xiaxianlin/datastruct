@@ -26,10 +26,12 @@ class Vector<T> {
     }
 
     // 复制向量
-    private copyFrom(A: Vector<T>, lo: Rank, hi: Rank) {
+    private copyFrom(A: Vector<T> | Array<T>, lo: Rank, hi: Rank) {
         this._elem = new Array((this._capactiy = 2 * (hi - lo)))
         this._size = 0
-        while (lo < hi) this._elem[this._size++] = A.get(lo++)
+        while (lo < hi) {
+            this._elem[this._size++] = A instanceof Vector ? A.get(lo++) : A[lo++]
+        }
     }
 
     // 扩容
@@ -58,21 +60,31 @@ class Vector<T> {
         for (let i = 0; i < this._size; i++) this._elem[i] = oldElem[i]
     }
 
-    constructor(arg1?: number | Vector<T> | T[], lo: Rank = 0, hi?: Rank) {
-        // 第一个是数字，则表示传入容量大小
-        if (typeof arg1 === 'number') {
-            this._capactiy = arg1 < DEFAULT_CAPACTIY ? DEFAULT_CAPACTIY : arg1
+    constructor(a1?: number | Vector<T> | T[], a2: Rank = 0, a3?: Rank | T) {
+        this._elem = new Array(DEFAULT_CAPACTIY)
+        // 初始化一个容量为a1，规模为a2，所有元素初始为a3
+        if (typeof a1 === 'number' && typeof a2 === 'number' && typeof a3 !== 'undefined') {
+            this._capactiy = Math.floor(a1)
+            this._elem = new Array<T>(this._capactiy)
+            for (this._size = 0; this._size < a2; this._size++) {
+                this._elem[this._size] = a3 as T
+            }
         }
-        // 初始化空间
-        this._elem = new Array(this._capactiy)
-        // 复制向量
-        if (arg1 instanceof Vector) {
-            hi = hi || arg1.size()
-            this.copyFrom(arg1, lo, hi)
+        // 数组整体复制
+        if (a1 instanceof Array && typeof a2 === 'number' && !a3) {
+            this.copyFrom(a1, 0, Math.floor(a2))
         }
-        // 复制数组
-        if (arg1 instanceof Array) {
-            for (let i = 0; i < arg1.length; i++) this.add(arg1[i])
+        // 数组区间复制
+        if (a1 instanceof Array && typeof a2 === 'number' && typeof a3 === 'number') {
+            this.copyFrom(a1, Math.floor(a2), Math.floor(a3))
+        }
+        // 向量整体复制
+        if (a1 instanceof Vector && !a1 && !a2) {
+            this.copyFrom(a1, 0, a1.size())
+        }
+        // 向量区间复制
+        if (a1 instanceof Vector && typeof a2 === 'number' && typeof a3 === 'number') {
+            this.copyFrom(a1, Math.floor(a2), Math.floor(a3))
         }
     }
 
@@ -100,7 +112,7 @@ class Vector<T> {
     }
 
     // 在指定位置之后插入元素
-    insert(r: Rank, e: T) {
+    insertAt(r: Rank, e: T) {
         this.assertOutOfBounds(r)
         this.expand()
         for (let i = this._size; i > r; i--) this._elem[i] = this._elem[i - 1]
@@ -108,6 +120,9 @@ class Vector<T> {
         this._size++
     }
 
+    insert(e: T) {
+        this.insertAt(this._size, e)
+    }
     // 删除指定位置的元素
     remove(r: Rank) {
         let e = this._elem[r]

@@ -4,6 +4,7 @@ import { convert, evaluate, labyrinth, paren, placeQueens } from './algorithm/st
 import { displayLaby, randLaby } from './utils/laby'
 import BinTree from './struct/binary_tree'
 import Bitmap from './common/bitmap'
+import GraphMatrix from './struct/graph_matrix'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -80,4 +81,218 @@ function testBinTreeTraversal() {
     console.log('isFullBinTree', tree.isFullBinTree())
 }
 
-// testBinTreeTraversal()
+function testGraphBFS() {
+    let graph = new GraphMatrix<string, any>()
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+    let vg = graph.insertVertex('G')
+    let vs = graph.insertVertex('S')
+
+    graph.insertEdge(101, vs, va, 0) // s->a
+    graph.insertEdge(103, vs, vd, 0) // s->d
+    graph.insertEdge(106, vd, vb, 0) // d->b
+    graph.insertEdge(102, vs, vc, 0) // s->c
+    graph.insertEdge(104, va, ve, 0) // a->e
+    graph.insertEdge(105, va, vc, 0) // a->c
+    graph.insertEdge(107, vc, vb, 0) // c->b
+    graph.insertEdge(108, ve, vf, 0) // e->f
+    graph.insertEdge(109, ve, vg, 0) // e->g
+    graph.insertEdge(110, vg, vf, 0) // g->f
+    graph.insertEdge(111, vg, vb, 0) // g->b
+
+    graph.bfs(vs)
+}
+
+function testGraphDFS() {
+    let graph = new GraphMatrix<string, any>()
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+    let vg = graph.insertVertex('G')
+
+    graph.insertEdge(101, va, vb, 0) // a->b
+    graph.insertEdge(103, va, vf, 0) // a->f
+    graph.insertEdge(106, va, vc, 0) // a->c
+    graph.insertEdge(102, vb, vc, 0) // b->c
+    graph.insertEdge(104, vg, vc, 0) // g->c
+    graph.insertEdge(105, vg, va, 0) // g->a
+    graph.insertEdge(107, vd, va, 0) // d->a
+    graph.insertEdge(108, vd, ve, 0) // d->e
+    graph.insertEdge(109, ve, vf, 0) // e->f
+    graph.insertEdge(110, vf, vg, 0) // f->g
+
+    graph.dfs(vd)
+}
+
+function testGraphTSort() {
+    let graph = new GraphMatrix<string, any>()
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+
+    graph.insertEdge(101, va, vc, 0) // a->c
+    graph.insertEdge(102, va, vd, 0) // a->d
+    graph.insertEdge(103, vb, vc, 0) // b->c
+    graph.insertEdge(104, vc, vd, 0) // c->d
+    graph.insertEdge(105, vc, vf, 0) // c->f
+    graph.insertEdge(106, vc, ve, 0) // c->e
+    graph.insertEdge(107, ve, vf, 0) // e->f
+
+    graph.tSort(vb)
+}
+
+function testGraphBCC() {
+    let graph = new GraphMatrix<string, any>()
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+    let vg = graph.insertVertex('G')
+    let vh = graph.insertVertex('H')
+    let vi = graph.insertVertex('I')
+    let vj = graph.insertVertex('J')
+
+    // ab
+    graph.insertEdge(101, va, vb, 0)
+    graph.insertEdge(101, vb, va, 0)
+    // ah
+    graph.insertEdge(102, va, vh, 0)
+    graph.insertEdge(102, vh, va, 0)
+    // ai
+    graph.insertEdge(103, va, vi, 0)
+    graph.insertEdge(103, vi, va, 0)
+    // aj
+    graph.insertEdge(104, va, vj, 0)
+    graph.insertEdge(104, vj, va, 0)
+    // bc
+    graph.insertEdge(105, vb, vc, 0)
+    graph.insertEdge(105, vc, vb, 0)
+    // cd
+    graph.insertEdge(106, vc, vd, 0)
+    graph.insertEdge(106, vd, vc, 0)
+    // ch
+    graph.insertEdge(107, vc, vh, 0)
+    graph.insertEdge(107, vh, vc, 0)
+    // de
+    graph.insertEdge(108, vd, ve, 0)
+    graph.insertEdge(108, ve, vd, 0)
+    // dg
+    graph.insertEdge(109, vd, vg, 0)
+    graph.insertEdge(109, vg, vd, 0)
+    // eg
+    graph.insertEdge(110, ve, vg, 0)
+    graph.insertEdge(110, vg, ve, 0)
+    // fg
+    graph.insertEdge(111, vf, vg, 0)
+    graph.insertEdge(111, vg, vf, 0)
+    // ij
+    graph.insertEdge(111, vi, vj, 0)
+    graph.insertEdge(111, vj, vi, 0)
+
+    graph.bcc(vb)
+}
+
+function testGraphPrim() {
+    let graph = new GraphMatrix<string, any>()
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+    let vg = graph.insertVertex('G')
+    let vh = graph.insertVertex('H')
+
+    // ad
+    graph.insertEdge(null, va, vd, 6)
+    graph.insertEdge(null, vd, va, 6)
+    // ag
+    graph.insertEdge(null, va, vg, 7)
+    graph.insertEdge(null, vg, va, 7)
+    // ab
+    graph.insertEdge(null, va, vb, 4)
+    graph.insertEdge(null, vb, va, 4)
+    // bc
+    graph.insertEdge(null, vb, vc, 12)
+    graph.insertEdge(null, vc, vb, 12)
+    // dg
+    graph.insertEdge(null, vd, vg, 2)
+    graph.insertEdge(null, vg, vd, 2)
+    // de
+    graph.insertEdge(null, vd, ve, 13)
+    graph.insertEdge(null, ve, vd, 13)
+    // dc
+    graph.insertEdge(null, vd, vc, 9)
+    graph.insertEdge(null, vc, vd, 9)
+    // eg
+    graph.insertEdge(null, ve, vg, 11)
+    graph.insertEdge(null, vg, ve, 11)
+    // ec
+    graph.insertEdge(null, ve, vc, 1)
+    graph.insertEdge(null, vc, ve, 1)
+    // ef
+    graph.insertEdge(null, ve, vf, 5)
+    graph.insertEdge(null, vf, ve, 5)
+    // eh
+    graph.insertEdge(null, ve, vh, 8)
+    graph.insertEdge(null, vh, ve, 8)
+    // gh
+    graph.insertEdge(null, vg, vh, 14)
+    graph.insertEdge(null, vh, vg, 14)
+    // cf
+    graph.insertEdge(null, vc, vf, 2)
+    graph.insertEdge(null, vf, vc, 2)
+    // ch
+    graph.insertEdge(null, vc, vh, 10)
+    graph.insertEdge(null, vh, vc, 10)
+    // fh
+    graph.insertEdge(null, vf, vh, 7)
+    graph.insertEdge(null, vh, vf, 7)
+
+    graph.prim(va)
+}
+
+function testGraphDijkstra() {
+    let graph = new GraphMatrix<string, any>()
+    let vs = graph.insertVertex('S')
+    let va = graph.insertVertex('A')
+    let vb = graph.insertVertex('B')
+    let vc = graph.insertVertex('C')
+    let vd = graph.insertVertex('D')
+    let ve = graph.insertVertex('E')
+    let vf = graph.insertVertex('F')
+    let vg = graph.insertVertex('G')
+
+    graph.insertEdge(null, vs, va, 9)
+    graph.insertEdge(null, vs, vc, 14)
+    graph.insertEdge(null, vs, vf, 15)
+
+    graph.insertEdge(null, va, vb, 25)
+    graph.insertEdge(null, vc, vb, 18)
+    graph.insertEdge(null, vc, vd, 30)
+    graph.insertEdge(null, vc, vf, 5)
+    graph.insertEdge(null, vf, vd, 20)
+    graph.insertEdge(null, vf, vg, 40)
+
+    graph.insertEdge(null, vb, vd, 2)
+    graph.insertEdge(null, vd, ve, 11)
+    graph.insertEdge(null, vd, vg, 16)
+    graph.insertEdge(null, ve, vb, 6)
+    graph.insertEdge(null, ve, vg, 6)
+
+    graph.dijkstra(vs)
+}
+
+testGraphPrim()

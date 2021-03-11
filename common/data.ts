@@ -30,3 +30,5 @@ export enum Direction {
     NORTH,
     NO_WAY
 }
+
+export const MAX_INT = 9007199254740991

@@ -77,11 +77,11 @@ export function randLaby(max: number): [Cell[][], Cell, Cell] {
     }
     for (let i = 1; i < size - 1; i++) {
         for (let j = 1; j < size - 1; j++) {
-            if (rand(0, 4) !== 2) laby[i][j].status = Status.AVAILABLE
+            if (rand(4) !== 2) laby[i][j].status = Status.AVAILABLE
         }
     }
-    let startCell = laby[rand(0, size - 2) + 1][rand(0, size - 2) + 1]
-    let goalCell = laby[rand(0, size - 2) + 1][rand(0, size - 2) + 1]
+    let startCell = laby[rand(size - 2) + 1][rand(size - 2) + 1]
+    let goalCell = laby[rand(size - 2) + 1][rand(size - 2) + 1]
     startCell.status = goalCell.status = Status.AVAILABLE
     return [laby, startCell, goalCell]
 }

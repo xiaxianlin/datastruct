@@ -20,9 +20,9 @@ function bestWindow(windows: Queue<Customer>[], nWin: number) {
 export function simulate(nWin: number, servTime: number) {
     let windows: Queue<Customer>[] = []
     for (let now = 0; now < servTime; now++) {
-        if (rand(0, nWin + 1) !== 1) {
+        if (rand(nWin + 1) !== 1) {
             let c = new Customer()
-            c.time = 1 + rand(0, 98)
+            c.time = 1 + rand(98)
             c.window = bestWindow(windows, nWin)
             windows[c.window].enqueue(c)
         }

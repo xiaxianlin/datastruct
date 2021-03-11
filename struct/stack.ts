@@ -2,7 +2,7 @@ import Vector from './vector'
 
 class Stack<T> extends Vector<T> {
     push(e: T) {
-        this.insert(this.size(), e)
+        this.insert(e)
     }
     pop() {
         return this.remove(this.size() - 1)

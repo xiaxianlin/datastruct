@@ -1,6 +1,13 @@
 import Stack from '../struct/stack'
 
-export function rand(min: number, max: number) {
+export function rand(min: number, max?: number) {
+    if (typeof max === 'undefined') {
+        min = 0
+        max = min
+    }
+    if (min > max) {
+        throw 'min must less then max'
+    }
     return Math.floor(Math.random() * max - min + 1 + min)
 }
 
