@@ -1,10 +1,13 @@
 import List from './struct/list'
 import { insertionSort, selectionSort } from './algorithm/sort'
 import { convert, evaluate, labyrinth, paren, placeQueens } from './algorithm/stack'
+import { fib } from './algorithm/other'
 import { displayLaby, randLaby } from './utils/laby'
 import BinTree from './struct/binary_tree'
-import Bitmap from './common/bitmap'
 import GraphMatrix from './struct/graph_matrix'
+import BST from './struct/bst'
+import AVL from './struct/avl'
+import { printBinTree } from './common/util'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -295,4 +298,34 @@ function testGraphDijkstra() {
     graph.dijkstra(vs)
 }
 
-testGraphPrim()
+function testBST() {
+    let tree = new BST<number>()
+    tree.insert(36)
+    tree.insert(27)
+    tree.insert(6)
+    tree.insert(58)
+    tree.insert(53)
+    tree.insert(69)
+    tree.insert(46)
+    tree.insert(40)
+
+    printBinTree(tree.root())
+}
+
+function testAVL() {
+    let tree = new AVL<number>()
+    tree.insert(36)
+    tree.insert(27)
+    tree.insert(6)
+    tree.insert(58)
+    tree.insert(53)
+    tree.insert(69)
+    tree.insert(46)
+    tree.insert(40)
+
+    tree.remove(27)
+    printBinTree(tree.root())
+    // tree.travIn((e) => console.log(e))
+}
+
+testAVL()

@@ -1,4 +1,4 @@
-import { swap } from './util'
+import { swap } from '../common/util'
 
 function bubble<T>(A: T[], lo: number, hi: number) {
     // 整体有序标准

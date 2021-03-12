@@ -1,5 +1,5 @@
 import { Rank } from '../common/types'
-import { swap } from '../algorithm/util'
+import { swap } from '../common/util'
 import { binSearchB } from '../algorithm/search'
 import { mergeSort } from '../algorithm/sort'
 

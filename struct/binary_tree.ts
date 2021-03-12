@@ -1,20 +1,10 @@
-import {
-    travIn_I1,
-    travIn_I2,
-    travIn_I3,
-    travIn_R,
-    travLevel,
-    travPost_I,
-    travPost_R,
-    travPre_I2,
-    travPre_R
-} from '../algorithm/binary_tree'
+import * as bta from '../algorithm/binary_tree'
 import { RBColor, VST } from '../common/types'
 /**
  * 高度
  * @param 获取节点p的高度
  */
-function stature<T>(p: BinNode<T>) {
+export function stature<T>(p: BinNode<T>) {
     // 在红黑树中，NULL视做外部节点，对应于0
     if (p && p.color > RBColor.NONE) {
         return p ? p.height : 0
@@ -31,6 +21,9 @@ export class BinNode<T> {
     height: number = 0
     npl: number = 1 // Nul Path Length
     color: RBColor = RBColor.NONE
+    // 打印的时候使用
+    level: number = 0
+    position: number = 0
 
     // setter
     setParent(parent: BinNode<T>) {
@@ -110,73 +103,24 @@ export class BinNode<T> {
     }
     // 子树层次遍历
     travLevel(visit: VST<T>) {
-        let data = []
-        travLevel(this, (e) => {
-            data.push(e)
-            visit(e)
-        })
-        console.log('[level] data :', data.join(', '))
+        bta.travLevel(this, visit)
     }
     // 子树先序遍历
     travPre(visit: VST<T>) {
-        let rData = []
-        travPre_R(this, (e) => {
-            rData.push(e)
-            visit(e)
-        })
-        console.log('[pre] rData :', rData.join(', '))
-
-        let iData = []
-        travPre_I2(this, (e) => {
-            iData.push(e)
-            visit(e)
-        })
-        console.log('[pre] iData :', iData.join(', '))
+        // bta.travPre_R(this, visit)
+        bta.travPre_I2(this, visit)
     }
     // 子树中序遍历
     travIn(visit: VST<T>) {
-        let rData = []
-        travIn_R(this, (e) => {
-            rData.push(e)
-            visit(e)
-        })
-        console.log('[in] rData :', rData.join(', '))
-
-        let i1Data = []
-        travIn_I1(this, (e) => {
-            i1Data.push(e)
-            visit(e)
-        })
-        console.log('[in] i1Data :', i1Data.join(', '))
-
-        let i2Data = []
-        travIn_I2(this, (e) => {
-            i2Data.push(e)
-            visit(e)
-        })
-        console.log('[in] i2Data :', i2Data.join(', '))
-
-        let i3Data = []
-        travIn_I3(this, (e) => {
-            i3Data.push(e)
-            visit(e)
-        })
-        console.log('[in] i3Data :', i3Data.join(', '))
+        // bta.travIn_R(this, visit)
+        // bta.travIn_I1(this, visit)
+        // bta.travIn_I2(this,visit)
+        bta.travIn_I3(this, visit)
     }
     // 子树后序遍历
     travPost(visit: VST<T>) {
-        let rData = []
-        travPost_R(this, (e) => {
-            rData.push(e)
-            visit(e)
-        })
-        console.log('[post] rData :', rData.join(', '))
-        let iData = []
-        travPost_I(this, (e) => {
-            iData.push(e)
-            visit(e)
-        })
-        console.log('[post] iData :', iData.join(', '))
+        // bta.travPost_R(this, visit)
+        bta.travPost_I(this, visit)
     }
     // 与本节点比较，-1是小于本节点，0是等于本节点，1是大于本节点
     compare(node: BinNode<T>) {
@@ -218,6 +162,22 @@ export class BinNode<T> {
     uncle() {
         this.parent.isLChild() ? this.parent.parent.rc : this.parent.parent.lc
     }
+    // 平衡条件
+    balanced() {
+        return stature(this.lc) === stature(this.rc)
+    }
+    // 平衡因子
+    balFac() {
+        return stature(this.lc) - stature(this.rc)
+    }
+    // AVL平衡条件
+    avlBalanced() {
+        return -2 < this.balFac() && this.balFac() < 2
+    }
+    setParentTo(data) {
+        if (this.isRoot()) {
+        }
+    }
 }
 
 class BinTree<T> {
@@ -226,6 +186,13 @@ class BinTree<T> {
     protected _size: number = 0
     // 根节点
     protected _root: BinNode<T> = null
+
+    // 删除规模
+    private removeSize(x: BinNode<T>) {
+        if (!x) return 0
+        let n = 1 + this.removeSize(x.lc) + this.removeSize(x.rc)
+        return n
+    }
 
     // 更新节点x的高度
     protected updateHeight(x: BinNode<T>) {
@@ -238,16 +205,16 @@ class BinTree<T> {
             x = x.parent
         }
     }
-    // 切断引用
-    protected cutRef(x: BinNode<T>) {
+    // 设置来自父亲的引用
+    protected setParentTo(x: BinNode<T>, data: BinNode<T> = null) {
         if (x.isRoot()) {
-            this._root = null
+            this._root = data
         } else {
             if (x.isLChild()) {
-                x.parent.lc = null
+                x.parent.lc = data
             }
             if (x.isRChild()) {
-                x.parent.rc = null
+                x.parent.rc = data
             }
         }
     }
@@ -304,9 +271,9 @@ class BinTree<T> {
         this.updateHeightAbove(x)
     }
     // 删除以位置x处节点为根的子树，返回该子树的原先规模
-    remove(x: BinNode<T>) {
+    removeAt(x: BinNode<T>) {
         // 切断引用
-        this.cutRef(x)
+        this.setParentTo(x, null)
         // 更新祖先高度
         this.updateHeightAbove(x.parent)
         // 计算删除规模
@@ -315,16 +282,10 @@ class BinTree<T> {
         this._size -= n
         return n
     }
-    // 删除规模
-    removeSize(x: BinNode<T>) {
-        if (!x) return 0
-        let n = 1 + this.removeSize(x.lc) + this.removeSize(x.rc)
-        return n
-    }
     // 将子树x从当前树中摘除，并将其转换为一颗独立子树
     secede(x: BinNode<T>) {
         // 切断引用
-        this.cutRef(x)
+        this.setParentTo(x, null)
         // 更新祖先高度
         this.updateHeightAbove(x.parent)
         // 构建新树

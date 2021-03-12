@@ -1,4 +1,4 @@
-import { swap } from './util'
+import { swap } from '../common/util'
 
 const { random, floor } = Math
 

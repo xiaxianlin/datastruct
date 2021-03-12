@@ -20,3 +20,18 @@ export function uniquify<T>(A: T[]) {
     let r = 0
     while (r !== A.length) A[r] === A[r + 1] ? A.splice(r, 1) : r++
 }
+
+export function fib(n: number) {
+    let p = 0
+    let c = 1
+    if (n < 2) {
+        return c
+    }
+    while (n > 1) {
+        let t = c
+        c = c + p
+        p = t
+        n--
+    }
+    return c
+}
