@@ -1,4 +1,3 @@
-import { compare } from '../common/util'
 import BinTree, { BinNode } from './binary_tree'
 
 class BST<T> extends BinTree<T> {
@@ -43,24 +42,117 @@ class BST<T> extends BinTree<T> {
         return succ // 返回接替者
     }
 
+    protected connect34(
+        a: BinNode<T>,
+        b: BinNode<T>,
+        c: BinNode<T>,
+        T0: BinNode<T>,
+        T1: BinNode<T>,
+        T2: BinNode<T>,
+        T3: BinNode<T>
+    ) {
+        a.lc = T0
+        if (T0) T0.parent = a
+        a.rc = T1
+        if (T1) T1.parent = a
+        this.updateHeight(a)
+        c.lc = T2
+        if (T2) T2.parent = c
+        c.rc = T3
+        if (T3) T3.parent = c
+        this.updateHeight(c)
+        b.lc = a
+        a.parent = b
+        b.rc = c
+        c.parent = b
+        this.updateHeight(b)
+        return b
+    }
+    protected rotateAt(v: BinNode<T>) {
+        let p = v.parent
+        let g = p.parent
+        // zig
+        if (p.isLChild()) {
+            // zig-zig
+            if (v.isLChild()) {
+                p.parent = g.parent // 向上联接
+                return this.connect34(v, p, g, v.lc, v.rc, p.rc, g.rc)
+            }
+            // zig-zag
+            else {
+                v.parent = g.parent // 向上联接
+                return this.connect34(p, v, g, p.lc, v.lc, v.rc, g.rc)
+            }
+        }
+        // zag
+        else {
+            // zag-zag
+            if (v.isRChild()) {
+                p.parent = g.parent // 向上联接
+                return this.connect34(g, p, v, g.lc, p.lc, v.lc, v.rc)
+            }
+            // zag-zig
+            else {
+                v.parent = g.parent // 向上联接
+                return this.connect34(g, v, p, g.lc, v.lc, v.rc, p.rc)
+            }
+        }
+    }
+
+    /**
+     * 旋转后进行父级重联接
+     */
+    protected relinkAfterRotateAt(g: BinNode<T>, x: BinNode<T>) {
+        let isRoot = g.isRoot(),
+            parent = g.parent,
+            isLC = g.isLChild()
+        let subTree = this.rotateAt(x)
+        // 重新接入原树
+        if (isRoot) {
+            this._root = subTree
+        } else {
+            if (isLC) {
+                parent.lc = subTree
+            } else {
+                parent.rc = subTree
+            }
+        }
+        return subTree
+    }
+    /**
+     * 联接插入的新节点
+     */
+    protected linkInsertNode(x: BinNode<T>) {
+        if (!this._root) {
+            this._root = x
+        } else {
+            // 判断左右
+            if (x.data < this._hot.data) {
+                this._hot.lc = x
+            } else {
+                this._hot.rc = x
+            }
+        }
+    }
+
     protected searchIn(v: BinNode<T>, e: T) {
-        if (!v || compare(e, this._root.data, '===')) return v
+        if (!v || e === this._root.data) return v
         this._hot = v
-        return this.searchIn(compare(e, this._hot.data, '<') ? v.lc : v.rc, e)
+        return this.searchIn(e < this._hot.data ? v.lc : v.rc, e)
     }
 
     search(e: T) {
         // 在树根v处命中
-        if (!this._root || compare(e, this._root.data, '===')) {
+        if (!this._root || e === this._root.data) {
             this._hot = null
             return this._root
         }
         // 否则，自顶而下
         for (this._hot = this._root; ; ) {
             // 确定方向
-            let c = compare(e, this._hot.data, '<') ? this._hot.lc : this._hot.rc
+            let c = e < this._hot.data ? this._hot.lc : this._hot.rc
             // 命中返回，或者深入下一层
-            if (!c || compare(e, c.data, '===')) return c
+            if (!c || e === c.data) return c
             this._hot = c
         } // 无论命中或失败，hot均指向v之父节点（v是根时，hot为null）
     }
@@ -70,16 +162,7 @@ class BST<T> extends BinTree<T> {
         if (x) return x
         x = new BinNode<T>(e, this._hot)
         // 如果没有根节点，先创建根节点
-        if (!this._root) {
-            this._root = x
-        } else {
-            // 判断左右
-            if (compare(e, this._hot.data, '<')) {
-                this._hot.lc = x
-            } else {
-                this._hot.rc = x
-            }
-        }
+        this.linkInsertNode(x)
         this._size++
         this.updateHeightAbove(x)
         return x

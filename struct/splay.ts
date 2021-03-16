@@ -1,4 +1,3 @@
-import { compare } from '../common/util'
 import { BinNode } from './binary_tree'
 import BST from './bst'
 
@@ -105,7 +104,7 @@ class Splay<T> extends BST<T> {
         // 创建新节点
         let t = this._root
         // 插入新根，以t和t.rc为左、右子级
-        if (compare(this._root.data, e, '<')) {
+        if (this._root.data < e) {
             t.parent = this._root = new BinNode(e, null, t, t.rc)
             if (t.hasRChild()) {
                 t.rc.parent = this._root
@@ -126,7 +125,7 @@ class Splay<T> extends BST<T> {
 
     remove(e: T) {
         // 若树空或目标不存在，则无法删除
-        if (!this._root || compare(e, this.search(e).data, '!==')) return false
+        if (!this._root || e !== this.search(e).data) return false
         let w = this._root // 经search后节点e已经被伸展至树根
         // 若无左子树，直接删除
         if (!this._root.hasLChild()) {

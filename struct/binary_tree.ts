@@ -54,7 +54,7 @@ export class BinNode<T> {
         rc: BinNode<T> = null,
         h: number = 0,
         l: number = 1,
-        c: RBColor = RBColor.NONE
+        c: RBColor = RBColor.RB_RED
     ) {
         this.data = e
         this.parent = p
@@ -161,7 +161,7 @@ export class BinNode<T> {
         return this.isLChild() ? this.parent.rc : this.parent.lc
     }
     uncle() {
-        this.parent.isLChild() ? this.parent.parent.rc : this.parent.parent.lc
+        return this.parent.isLChild() ? this.parent.parent.rc : this.parent.parent.lc
     }
     // 平衡条件
     balanced() {
@@ -174,10 +174,6 @@ export class BinNode<T> {
     // AVL平衡条件
     avlBalanced() {
         return -2 < this.balFac() && this.balFac() < 2
-    }
-    setParentTo(data) {
-        if (this.isRoot()) {
-        }
     }
 }
 
@@ -207,15 +203,15 @@ class BinTree<T> {
         }
     }
     // 设置来自父亲的引用
-    protected setParentTo(x: BinNode<T>, data: BinNode<T> = null) {
+    protected setParentTo(x: BinNode<T>, c: BinNode<T> = null) {
         if (x.isRoot()) {
-            this._root = data
+            this._root = c
         } else {
             if (x.isLChild()) {
-                x.parent.lc = data
+                x.parent.lc = c
             }
             if (x.isRChild()) {
-                x.parent.rc = data
+                x.parent.rc = c
             }
         }
     }

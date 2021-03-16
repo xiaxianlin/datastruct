@@ -10,6 +10,7 @@ import AVL from './struct/avl'
 import Splay from './struct/splay'
 import Vector from './struct/vector'
 import BTree from './struct/btree'
+import RedBlackTree from './struct/red_black_tree'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -311,6 +312,7 @@ function testBST() {
     tree.insert(46)
     tree.insert(40)
 
+    console.log('-----BST-----')
     tree.print()
 }
 
@@ -325,26 +327,22 @@ function testAVL() {
     tree.insert(46)
     tree.insert(40)
 
-    tree.remove(27)
+    console.log('-----AVL-----')
     tree.print()
 }
 
 function testSplay() {
     let tree = new Splay<number>()
-    tree.insert(1)
-    tree.insert(2)
-    tree.insert(3)
-    tree.insert(4)
-    tree.insert(5)
+    tree.insert(36)
+    tree.insert(27)
     tree.insert(6)
-    tree.insert(7)
+    tree.insert(58)
+    tree.insert(53)
+    tree.insert(69)
+    tree.insert(46)
+    tree.insert(40)
 
-    tree.print()
-
-    tree.search(1)
-    // tree.print()
-
-    tree.remove(4)
+    console.log('-----SPLAY-----')
     tree.print()
 }
 
@@ -374,4 +372,24 @@ function testBTree() {
     // })
 }
 
-testBTree()
+function testRedBlackTree() {
+    let tree = new RedBlackTree<number>()
+    tree.insert(36)
+    tree.insert(27)
+    tree.insert(6)
+    tree.insert(58)
+    tree.insert(53)
+    tree.insert(69)
+    tree.insert(46)
+    tree.insert(40)
+
+    tree.remove(53)
+
+    console.log('-----REDBLACK-----')
+    tree.print()
+}
+
+// testBST()
+// testAVL()
+// testSplay()
+testRedBlackTree()

@@ -47,24 +47,6 @@ export function calcu(op: string, n1: number, n2?: number) {
     }
 }
 
-export function compare<K, V, T>(a: T | Entry<K, V>, b: T | Entry<K, V>, op: string) {
-    let isEntry = a instanceof Entry && b instanceof Entry
-    switch (op) {
-        case '>':
-            return isEntry ? (a as Entry<K, V>).gt(b as Entry<K, V>) : a > b
-        case '<':
-            return isEntry ? (a as Entry<K, V>).lt(b as Entry<K, V>) : a < b
-        case '>=':
-            return isEntry ? (a as Entry<K, V>).gte(b as Entry<K, V>) : a >= b
-        case '<=':
-            return isEntry ? (a as Entry<K, V>).lte(b as Entry<K, V>) : a <= b
-        case '===':
-            return isEntry ? (a as Entry<K, V>).eq(b as Entry<K, V>) : a === b
-        case '!==':
-            return isEntry ? (a as Entry<K, V>).neq(b as Entry<K, V>) : a !== b
-    }
-}
-
 export function swap<T>(arr: T[], i: number, j: number) {
     let t = arr[i]
     arr[i] = arr[j]

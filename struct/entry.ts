@@ -14,23 +14,27 @@ class Entry<K, V> {
         }
     }
 
-    lt(e: Entry<K, V>) {
-        return this.key < e.key
-    }
-    gt(e: Entry<K, V>) {
-        return this.key > e.key
-    }
-    lte(e: Entry<K, V>) {
-        return this.key <= e.key
-    }
-    gte(e: Entry<K, V>) {
-        return this.key >= e.key
-    }
-    eq(e: Entry<K, V>) {
-        return this.key === e.key
-    }
-    neq(e: Entry<K, V>) {
-        return this.key !== e.key
+    // lt(e: Entry<K, V>) {
+    //     return this.key < e.key
+    // }
+    // gt(e: Entry<K, V>) {
+    //     return this.key > e.key
+    // }
+    // lte(e: Entry<K, V>) {
+    //     return this.key <= e.key
+    // }
+    // gte(e: Entry<K, V>) {
+    //     return this.key >= e.key
+    // }
+    // eq(e: Entry<K, V>) {
+    //     return this.key === e.key
+    // }
+    // neq(e: Entry<K, V>) {
+    //     return this.key !== e.key
+    // }
+
+    valueOf() {
+        return this.key
     }
 }
 
