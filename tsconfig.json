@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "lib": ["DOM", "ES2015", "ES2015.Proxy"],
+        "noImplicitAny": false,
+        "removeComments": true,
+        "preserveConstEnums": true
+    }
+}

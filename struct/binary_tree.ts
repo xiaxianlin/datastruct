@@ -1,5 +1,6 @@
 import * as bta from '../algorithm/binary_tree'
 import { RBColor, VST } from '../common/types'
+import { printBinTree } from '../common/util'
 /**
  * 高度
  * @param 获取节点p的高度
@@ -322,6 +323,10 @@ class BinTree<T> {
     // 是否是满二叉树
     isFullBinTree() {
         return this._size === Math.pow(2, this._root.height + 1) - 1
+    }
+
+    print() {
+        printBinTree(this._root)
     }
 }
 

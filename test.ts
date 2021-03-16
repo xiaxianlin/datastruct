@@ -7,7 +7,9 @@ import BinTree from './struct/binary_tree'
 import GraphMatrix from './struct/graph_matrix'
 import BST from './struct/bst'
 import AVL from './struct/avl'
-import { printBinTree } from './common/util'
+import Splay from './struct/splay'
+import Vector from './struct/vector'
+import BTree from './struct/btree'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -309,7 +311,7 @@ function testBST() {
     tree.insert(46)
     tree.insert(40)
 
-    printBinTree(tree.root())
+    tree.print()
 }
 
 function testAVL() {
@@ -324,8 +326,52 @@ function testAVL() {
     tree.insert(40)
 
     tree.remove(27)
-    printBinTree(tree.root())
-    // tree.travIn((e) => console.log(e))
+    tree.print()
 }
 
-testAVL()
+function testSplay() {
+    let tree = new Splay<number>()
+    tree.insert(1)
+    tree.insert(2)
+    tree.insert(3)
+    tree.insert(4)
+    tree.insert(5)
+    tree.insert(6)
+    tree.insert(7)
+
+    tree.print()
+
+    tree.search(1)
+    // tree.print()
+
+    tree.remove(4)
+    tree.print()
+}
+
+function testBTree() {
+    let tree = new BTree<number>()
+    tree.insert(19)
+    tree.insert(36)
+    tree.insert(41)
+    tree.insert(51)
+    tree.insert(53)
+    tree.insert(75)
+    tree.insert(77)
+    tree.insert(79)
+    tree.insert(84)
+    tree.insert(89)
+    tree.insert(97)
+
+    // console.log(tree.root())
+    // tree.root().child.traverse((e) => {
+    //     console.log(e)
+    // })
+
+    tree.remove(36)
+    // console.log(tree.root())
+    // tree.root().child.traverse((e) => {
+    //     console.log(e)
+    // })
+}
+
+testBTree()

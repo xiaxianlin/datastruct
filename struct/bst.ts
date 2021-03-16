@@ -43,6 +43,12 @@ class BST<T> extends BinTree<T> {
         return succ // 返回接替者
     }
 
+    protected searchIn(v: BinNode<T>, e: T) {
+        if (!v || compare(e, this._root.data, '===')) return v
+        this._hot = v
+        return this.searchIn(compare(e, this._hot.data, '<') ? v.lc : v.rc, e)
+    }
+
     search(e: T) {
         // 在树根v处命中
         if (!this._root || compare(e, this._root.data, '===')) {

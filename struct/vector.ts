@@ -1,6 +1,6 @@
 import { Rank } from '../common/types'
-import { swap } from '../common/util'
-import { binSearchB } from '../algorithm/search'
+import { isdigit, swap } from '../common/util'
+import { binSearchB, binSearchC } from '../algorithm/search'
 import { mergeSort } from '../algorithm/sort'
 
 const { random, floor } = Math
@@ -11,15 +11,15 @@ class Vector<T> {
     private _capactiy = DEFAULT_CAPACTIY
     private _elem: T[] = []
 
-    private assertOutOfBounds(r: Rank) {
+    private assertOutOfBounds(r: Rank, method: string = 'any') {
         if (r < 0 || r > this._size) {
-            throw `Vector rank [${r}] out of bounds.`
+            throw `[${method}]: Vector rank [${r}] out of bounds.`
         }
     }
 
-    private assertSectionRank(lo: Rank, hi: Rank) {
-        this.assertOutOfBounds(lo)
-        this.assertOutOfBounds(hi)
+    private assertSectionRank(lo: Rank, hi: Rank, method: string = 'any') {
+        this.assertOutOfBounds(lo, method)
+        this.assertOutOfBounds(hi, method)
         if (lo >= hi) {
             throw 'Low rank greater than high Rank'
         }
@@ -60,7 +60,7 @@ class Vector<T> {
         for (let i = 0; i < this._size; i++) this._elem[i] = oldElem[i]
     }
 
-    constructor(a1?: number | Vector<T> | T[], a2: Rank = 0, a3?: Rank | T) {
+    constructor(a1?: number | Vector<T> | T[], a2?: Rank, a3?: Rank | T) {
         this._elem = new Array(DEFAULT_CAPACTIY)
         // 初始化一个容量为a1，规模为a2，所有元素初始为a3
         if (typeof a1 === 'number' && typeof a2 === 'number' && typeof a3 !== 'undefined') {
@@ -71,6 +71,10 @@ class Vector<T> {
             }
         }
         // 数组整体复制
+        if (a1 instanceof Array && !a2 && !a3) {
+            this.copyFrom(a1, 0, a1.length)
+        }
+        // 数组区间复制
         if (a1 instanceof Array && typeof a2 === 'number' && !a3) {
             this.copyFrom(a1, 0, Math.floor(a2))
         }
@@ -86,6 +90,25 @@ class Vector<T> {
         if (a1 instanceof Vector && typeof a2 === 'number' && typeof a3 === 'number') {
             this.copyFrom(a1, Math.floor(a2), Math.floor(a3))
         }
+
+        // return new Proxy(this, {
+        //     get(target, prop) {
+        //         if (/\d+/.test(prop as string)) {
+        //             return target.get(prop as number)
+        //         } else {
+        //             return target[prop]
+        //         }
+        //     },
+        //     set(target, prop, value) {
+        //         if (/\d+/.test(prop as string)) {
+        //             let r = prop as number
+        //             r < target._size ? target.put(prop as number, value) : target.insertAt(r, value)
+        //         } else {
+        //             target[prop] = value
+        //         }
+        //         return true
+        //     }
+        // })
     }
 
     protected add(e: T) {
@@ -101,23 +124,22 @@ class Vector<T> {
 
     // 获取元素
     get(r: Rank) {
-        this.assertOutOfBounds(r)
+        this.assertOutOfBounds(r, 'get')
         return this._elem[r]
     }
 
     // 在指定位置之后替换元素
     put(r: Rank, e: T) {
-        this.assertOutOfBounds(r)
+        this.assertOutOfBounds(r, 'put')
         this._elem[r] = e
     }
 
     // 在指定位置之后插入元素
     insertAt(r: Rank, e: T) {
-        this.assertOutOfBounds(r)
         this.expand()
+        this._size++
         for (let i = this._size; i > r; i--) this._elem[i] = this._elem[i - 1]
         this._elem[r] = e
-        this._size++
     }
 
     insert(e: T) {
@@ -132,7 +154,7 @@ class Vector<T> {
 
     // 区间删除
     sectionRemove(lo: Rank, hi: Rank) {
-        this.assertSectionRank(lo, hi)
+        this.assertSectionRank(lo, hi, 'sectionRemove')
         if (lo == hi) return 0
         // [hi, _size)顺次前移hi-lo个单元
         while (hi < this._size) this._elem[lo++] = this._elem[hi++]
@@ -168,7 +190,7 @@ class Vector<T> {
 
     // 区间无序向量的顺序查找，返回最后一个元素e的位置
     findInSection(e: T, lo: Rank, hi: Rank) {
-        this.assertSectionRank(lo, hi)
+        this.assertSectionRank(lo, hi, 'findInSection')
         while (lo < hi-- && e != this.get(hi));
         return hi < lo ? -1 : hi
     }
@@ -178,7 +200,7 @@ class Vector<T> {
     }
 
     searchInSection(e: T, lo: Rank, hi: Rank) {
-        return binSearchB(this._elem, e, lo, hi)
+        return binSearchC(this._elem, e, lo, hi)
     }
 
     sort() {
@@ -233,7 +255,7 @@ class Vector<T> {
     }
 
     // 遍历
-    tranverse(visit: (e: T) => void) {
+    traverse(visit: (e: T) => void) {
         for (let i = 0; i < this._size; i++) visit(this._elem[i])
     }
 }
