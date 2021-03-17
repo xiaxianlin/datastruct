@@ -1,35 +1,15 @@
 import { fibSearch } from '../algorithm/search'
 
-class ListNode<T> {
-    private data: T // 数据
-    private pred: ListNode<T> // 前驱节点
-    private succ: ListNode<T> // 后继节点
+export class ListNode<T> {
+    data: T // 数据
+    pred: ListNode<T> // 前驱节点
+    succ: ListNode<T> // 后继节点
 
     // ----- public -----
     constructor(e: T = null, p: ListNode<T> = null, s: ListNode<T> = null) {
-        this.setData(e)
-        this.setPred(p)
-        this.setSucc(s)
-    }
-
-    // ----- setter & geter -----
-    setData(e: T) {
         this.data = e
-    }
-    setPred(p: ListNode<T>) {
         this.pred = p
-    }
-    setSucc(s: ListNode<T>) {
         this.succ = s
-    }
-    getData() {
-        return this.data
-    }
-    getPred() {
-        return this.pred
-    }
-    getSucc() {
-        return this.succ
     }
     // 插入前驱节点，存入对象被引用对象e，返回新节点位置
     insertAsPred(e: T) {
@@ -55,58 +35,58 @@ class List<T> {
     protected init() {
         this.header = new ListNode<T>()
         this.trailer = new ListNode<T>()
-        this.header.setPred(null)
-        this.header.setSucc(this.trailer)
-        this.trailer.setPred(this.header)
-        this.trailer.setSucc(null)
+        this.header.pred = null
+        this.header.succ = this.trailer
+        this.trailer.pred = this.header
+        this.trailer.succ = null
         this._size = 0
     }
     protected clear() {
         let oldSize = this._size
-        while (0 < this._size) this.remove(this.header.getSucc())
+        while (0 < this._size) this.remove(this.header.succ)
         return oldSize
     }
     protected copyNodes(p: ListNode<T>, n: number) {
         this.init()
         while (n--) {
-            this.insertAsLast(p.getData())
-            p = p.getSucc()
+            this.insertAsLast(p.data)
+            p = p.succ
         }
     }
 
     protected print(p: ListNode<T>, n: number) {
         let A = []
         while (0 < n) {
-            p = p.getSucc()
+            p = p.succ
             if (!p) break
-            A.push(p.getPred().getData())
+            A.push(p.pred.data)
             n--
         }
         console.log(A)
     }
 
     protected swap(a: ListNode<T>, b: ListNode<T>) {
-        let ap = a.getPred()
-        let an = a.getSucc()
-        let bp = b.getPred()
-        let bn = b.getSucc()
+        let ap = a.pred
+        let an = a.succ
+        let bp = b.pred
+        let bn = b.succ
         // A节点后端
-        a.setSucc(bn)
-        bn.setPred(a)
+        a.succ = bn
+        bn.pred = a
         // B节点前端
-        b.setPred(ap)
-        ap.setSucc(b)
+        b.pred = ap
+        ap.succ = b
         // A和B为相邻节点
         if (a === bp) {
-            a.setPred(b)
-            b.setSucc(a)
+            a.pred = b
+            b.succ = a
         } else {
             // A节点前端
-            a.setPred(bp)
-            bp.setSucc(a)
+            a.pred = bp
+            bp.succ = a
             // B节点后端
-            b.setSucc(an)
-            an.setPred(b)
+            b.succ = an
+            an.pred = b
         }
     }
     protected merge(lo: number, mid: number, hi: number) {
@@ -116,14 +96,14 @@ class List<T> {
             q = this.get(mid)
         while (0 < m) {
             // // 若p仍在区间内且v(p) <= v(q)则
-            if (0 < n && p.getData() <= q.getData()) {
+            if (0 < n && p.data <= q.data) {
                 // p归入合并的列表，并替换为其直接后继
-                if ((p = p.getSucc()) === q) break
+                if ((p = p.succ) === q) break
                 n--
             }
             // 如果p超出右界或v(q) < v(p)，则
             else {
-                this.insertBefore(p, this.remove((q = q.getSucc()).getPred()))
+                this.insertBefore(p, this.remove((q = q.succ).pred))
                 m--
             }
         }
@@ -138,21 +118,21 @@ class List<T> {
         this.merge(lo, m, hi)
     }
     protected selectionSort(p: ListNode<T>, n: number) {
-        let head = p.getPred(),
+        let head = p.pred,
             tail = p
-        for (let i = 0; i < n; i++) tail = tail.getSucc()
+        for (let i = 0; i < n; i++) tail = tail.succ
         while (1 < n) {
-            let max = this.selectMaxAfter(head.getSucc(), n)
+            let max = this.selectMaxAfter(head.succ, n)
             this.insertBefore(tail, this.remove(max))
-            tail = tail.getPred()
+            tail = tail.pred
             n--
         }
     }
     protected insertionSort(p: ListNode<T>, n: number) {
         for (let r = 0; r < n; r++) {
-            this.insertAfter(this.searchInSection(p.getData(), r, p), p.getData())
-            p = p.getSucc()
-            this.remove(p.getPred())
+            this.insertAfter(this.searchInSection(p.data, r, p), p.data)
+            p = p.succ
+            this.remove(p.pred)
         }
     }
     // ----- public -----
@@ -196,16 +176,16 @@ class List<T> {
     // 循秩访问
     get(r: number) {
         let p = this.first()
-        while (0 < r--) p = p.getSucc()
+        while (0 < r--) p = p.succ
         return p
     }
     // 首节点位置
     first() {
-        return this.header.getSucc()
+        return this.header.succ
     }
     // 末节点位置
     last() {
-        return this.trailer.getPred()
+        return this.trailer.pred
     }
     // 判断位置p是否对外合法
     valid(p: ListNode<T>) {
@@ -220,7 +200,7 @@ class List<T> {
     // 区间内无序查找
     findInSection(e: T, n: number, p: ListNode<T>) {
         while (0 < n--) {
-            if (e === (p = p.getPred()).getData()) {
+            if (e === (p = p.pred).data) {
                 return p
             }
         }
@@ -233,7 +213,7 @@ class List<T> {
     // 区间内有序查找
     searchInSection(e: T, n: number, p: ListNode<T>) {
         while (0 <= n--) {
-            if ((p = p.getPred()).getData() <= e) break
+            if ((p = p.pred).data <= e) break
         }
         if (p === this.trailer) {
             return null
@@ -242,13 +222,13 @@ class List<T> {
     }
     // 选出整体最大者
     selectMax() {
-        return this.selectMaxAfter(this.header.getSucc(), this._size)
+        return this.selectMaxAfter(this.header.succ, this._size)
     }
     // 在p及其n-1个后继中选出最大者
     selectMaxAfter(p: ListNode<T>, n: number) {
         let max = p
         for (let cur = p; 1 < n; n--) {
-            if ((cur = cur.getSucc()).getData() > max.getData()) {
+            if ((cur = cur.succ).data > max.data) {
                 max = cur
             }
         }
@@ -276,9 +256,9 @@ class List<T> {
     }
     // 删除合法位置p处的节点，返回被删除的节点
     remove(p: ListNode<T>) {
-        let e = p.getData()
-        p.getPred().setSucc(p.getSucc())
-        p.getSucc().setPred(p.getPred())
+        let e = p.data
+        p.pred.succ = p.succ
+        p.succ.pred = p.pred
         this._size--
         return e
     }
@@ -302,9 +282,9 @@ class List<T> {
         let p = this.header
         let r = 0
         // 依次直到末节点
-        while (this.trailer !== (p = p.getSucc())) {
+        while (this.trailer !== (p = p.succ)) {
             // 在p的r个前驱中查找雷同者
-            let q = this.findInSection(p.getData(), r, p)
+            let q = this.findInSection(p.data, r, p)
             // 若存在，则删除之，否则秩加一
             q ? this.remove(q) : r++
         }
@@ -322,9 +302,9 @@ class List<T> {
         // q为后继节点
         let q: ListNode<T> = null
         // 反复考查紧邻的节点对(p, q)
-        while (this.trailer !== (q = p.getSucc())) {
+        while (this.trailer !== (q = p.succ)) {
             // 若互异，则转向下一区段
-            if (p.getData() !== q.getData()) p = q
+            if (p.data !== q.data) p = q
             // 否则，删除后者
             else this.remove(q)
         }
@@ -336,18 +316,18 @@ class List<T> {
         let fc = this.first(),
             bc = this.last()
         // 游标移动，当列表规模为奇数时，前后游标会移动到同一个，为偶数时，前游标是前一个是后游标则停止
-        while (fc !== bc && fc.getPred() !== bc) {
+        while (fc !== bc && fc.pred !== bc) {
             this.swap(fc, bc)
             // 游标移动
-            let t = fc.getPred()
-            fc = bc.getSucc()
+            let t = fc.pred
+            fc = bc.succ
             bc = t
         }
     }
     // 遍历
     traverse(visit: (e: T) => void) {
-        for (let p = this.header.getSucc(); p !== this.trailer; p = p.getSucc()) {
-            visit(p.getData())
+        for (let p = this.header.succ; p !== this.trailer; p = p.succ) {
+            visit(p.data)
         }
     }
 }

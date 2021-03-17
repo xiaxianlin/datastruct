@@ -7,3 +7,5 @@ export enum RBColor {
 }
 
 export type VST<T> = (e: T) => void
+
+export type Ref<T> = { value: T }

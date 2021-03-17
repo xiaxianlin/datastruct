@@ -5,8 +5,8 @@ import Stack from '../struct/stack'
 
 export function rand(min: number, max?: number) {
     if (typeof max === 'undefined') {
-        min = 0
         max = min
+        min = 0
     }
     if (min > max) {
         throw 'min must less then max'
@@ -96,4 +96,8 @@ export function printBinTree<T>(x: BinNode<T>, closed: boolean = false) {
         return info + tmp.join('') + '\n'
     }, '')
     console.log(info)
+}
+
+export function createRef<T>(value: T) {
+    return { value }
 }

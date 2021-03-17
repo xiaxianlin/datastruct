@@ -11,6 +11,7 @@ import Splay from './struct/splay'
 import Vector from './struct/vector'
 import BTree from './struct/btree'
 import RedBlackTree from './struct/red_black_tree'
+import SkipList from './struct/skip_list'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -389,7 +390,21 @@ function testRedBlackTree() {
     tree.print()
 }
 
+function testSkipList() {
+    let list = new SkipList<number, string>()
+    list.put(1, 'one')
+    list.put(12, 'tweleve')
+
+    console.log(list.get(12))
+
+    list.remove(12)
+
+    console.log(list.get(12))
+}
+
 // testBST()
 // testAVL()
 // testSplay()
-testRedBlackTree()
+// testRedBlackTree()
+
+testSkipList()

@@ -8,7 +8,7 @@ class Queue<T> extends List<T> {
         return this.remove(this.first())
     }
     front() {
-        return this.first().getData()
+        return this.first().data
     }
 }
 
