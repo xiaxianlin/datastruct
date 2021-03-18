@@ -14,10 +14,13 @@ class HashTable<K, V> implements Dictionary<K, V> {
     private _removed: Bitmap // 懒惰删除标记
     // 沿关键码k对应的查找链，找到词条匹配的桶
     protected probe4Hit(k: K) {
+        // 按除余法确定试探链起点
         let r = hashCode(k) % this._M
+        // 线性试探（跳过带懒惰删除标记的桶）
         while ((this._ht[r] && k !== this._ht[r].key) || (!this._ht[r] && this._removed.test(r))) {
             r = (r + 1) % this._M
         }
+        // 调用者根据ht[r]是否为空及其内容，即可判断查找是否成功
         return r
     }
     // 沿关键码k对应的查找链，找到首个可用桶

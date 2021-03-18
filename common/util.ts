@@ -13,7 +13,7 @@ export function rand(min: number, max?: number) {
     if (min > max) {
         throw 'min must less then max'
     }
-    return Math.floor(Math.random() * max - min + 1 + min)
+    return Math.round(Math.random() * (max - min)) + min
 }
 
 export function isdigit(s: string) {

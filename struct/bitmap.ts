@@ -1,12 +1,17 @@
 import * as fs from 'fs'
 // 0x80 -> 128
 // 0x70 -> 112
-// x >> y -> Math.floor(x / (y * y))
+// x >> y -> Math.floor(x / (2 ^ y))
+// 0x80 >> (k & 0x70) 当Math.ceil((k+1)/16)为奇数时=128，为偶数=0，K>=0
+// k | 128 = k + 128, k | 0 = 0
 class Bitmap {
     private _M: Array<number>
     private _N: number
 
     constructor(file?: string | number, n?: number) {
+        if (!file) {
+            this.init(8)
+        }
         if (typeof file === 'number' && !n) {
             this.init(file)
         }
@@ -24,58 +29,21 @@ class Bitmap {
     }
 
     set(k: number) {
-        this._M[k >> 3] |= 0x80 >> (k & 0x70)
+        this._M[k >> 3] |= 0x80 >> (k & 0x07)
     }
 
     clear(k: number) {
-        this._M[k >> 3] &= ~(0x80 >> (k & 0x70))
+        this._M[k >> 3] &= ~(0x80 >> (k & 0x07))
     }
 
     test(k: number) {
-        return this._M[k >> 3] & (0x80 >> (k & 0x70))
+        return this._M[k >> 3] & (0x80 >> (k & 0x07))
     }
 
     bits2string(n: number) {
-        let s: any[] = []
-        for (let i = 0; i < n; i++) s[i] = this.test(i) ? '1' : '0'
-        s.push('\0')
+        let s = ''
+        for (let i = 0; i < n; i++) s += this.test(i) ? '1' : '0'
         return s
-    }
-}
-
-class Bitmap1 {
-    private _F: number[] // 规模为N的向量F，记录[k]被标记的次序（即其在栈T[]中的秩）
-    private _N: number
-    private _T: number[] // 规模为N的栈T，记录被标记各位秩的栈
-    private _top: number // 栈顶
-
-    constructor(n: number) {
-        this._N = n
-        this._F = new Array(n)
-        this._T = new Array(n)
-        this._top = 0
-    }
-
-    reset() {
-        this._top = 0
-    }
-
-    set(k: number) {
-        if (!this.test(k)) {
-            this._T[this._top] = k
-            this._F[k] = this._top++
-        }
-    }
-
-    clear(k: number) {
-        if (this.test(k) && --this._top) {
-            this._F[this._T[this._top]] = this._F[k]
-            this._T[this._F[this._top]] = this._T[this._top]
-        }
-    }
-
-    test(k: number) {
-        return -1 < this._F[k] && this._F[k] < this._top && k == this._T[this._F[k]]
     }
 }
 

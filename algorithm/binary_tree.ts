@@ -1,10 +1,7 @@
 import { VST } from '../common/types'
-import BinTree, { BinNode } from '../struct/binary_tree'
+import { BinNode } from '../struct/binary_tree'
 import Stack from '../struct/stack'
 import Queue from '../struct/queue'
-import Vector from '../struct/vector'
-import { rand } from '../common/util'
-import Bitmap from '../struct/bitmap'
 // 从当前节点出发，沿左分支不断深入，直到没有左分支的节点；沿途节点遇到后立即访问
 function visitAlongLeftBranch<T>(x: BinNode<T>, visit: VST<T>, S: Stack<BinNode<T>>) {
     while (x) {
@@ -170,47 +167,3 @@ export function travLevel<T>(x: BinNode<T>, visit: VST<T>) {
         if (x.hasRChild()) Q.enqueue(x.rc) // 右子节点入队
     }
 }
-
-/**********PFC编码及解码**********/
-
-type PFCTree = BinTree<any>
-type PFCForest = Vector<PFCTree>
-
-const N_CHAR = 0x80 - 0x20
-/**
- * 初始化PFC森林
- */
-function initForest() {
-    let forest = new Vector<PFCTree>()
-    for (let i = 0; i < N_CHAR; i++) {
-        forest.insertAt(i, new BinTree<any>())
-        forest.get(i).insertAsRoot(0x20 + i)
-    }
-    return forest
-}
-
-/**
- * 构造PFC编码树
- */
-function generateTree(forest: PFCForest) {
-    // 共做|forest|-1次合并
-    while (1 < forest.size()) {
-        // 创建新树（根标记为^）
-        let s = new BinTree<any>()
-        s.insertAsRoot('^')
-        // 随机选取r1，且作为左子树接入，然后剔除
-        let r1 = rand(forest.size())
-        s.attachAsLC(s.root(), forest[r1])
-        forest.remove(r1)
-        // 随机选取r2，且作为右子树接入，然后剔除
-        let r2 = rand(forest.size())
-        s.attachAsRC(s.root(), forest[r2])
-        forest.remove(r2)
-        // 合并后的PFC树重新植入PFC森林
-        forest.insert(s)
-    }
-    // 至此，森林中尚存最后一棵树，即全局PFC编码
-    return forest[0]
-}
-
-function generateCT(code: Bitmap, length: number) {}

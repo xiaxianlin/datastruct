@@ -16,8 +16,9 @@ import RedBlackTree from './struct/red_black_tree'
 import SkipList from './struct/skip_list'
 import { fibSearch } from './algorithm/search'
 import Bitmap from './struct/bitmap'
-import { primeNLT } from './common/util'
+import { primeNLT, rand } from './common/util'
 import HashTable from './struct/hashtable'
+import { testPfcCode } from './algorithm/pfc'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -429,4 +430,4 @@ function testHashtable() {
 
 // testSkipList()
 
-testHashtable()
+testPfcCode('message')
