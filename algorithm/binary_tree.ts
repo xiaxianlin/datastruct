@@ -4,7 +4,7 @@ import Stack from '../struct/stack'
 import Queue from '../struct/queue'
 import Vector from '../struct/vector'
 import { rand } from '../common/util'
-import Bitmap from '../common/bitmap'
+import Bitmap from '../struct/bitmap'
 // 从当前节点出发，沿左分支不断深入，直到没有左分支的节点；沿途节点遇到后立即访问
 function visitAlongLeftBranch<T>(x: BinNode<T>, visit: VST<T>, S: Stack<BinNode<T>>) {
     while (x) {

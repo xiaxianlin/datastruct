@@ -1,7 +1,9 @@
 import BinTree, { BinNode } from '../struct/binary_tree'
+import Bitmap from '../struct/bitmap'
 import Entry from '../struct/entry'
 import Queue from '../struct/queue'
 import Stack from '../struct/stack'
+import { MAX_INT } from './data'
 
 export function rand(min: number, max?: number) {
     if (typeof max === 'undefined') {
@@ -100,4 +102,43 @@ export function printBinTree<T>(x: BinNode<T>, closed: boolean = false) {
 
 export function createRef<T>(value: T) {
     return { value }
+}
+
+/**
+ * 根据file文件中的记录，在[c, n)内取最小的素数
+ */
+export function primeNLT(c: number, n: number, file: string) {
+    let b = new Bitmap(file, n) // file已经按位图格式记录了n以内的所有素数，因此只要
+    // 从c开始，逐位地
+    while (c < n) {
+        // 测试，即可
+        if (b.test(c)) {
+            c++
+        }
+        // 返回首个发现的素数
+        else {
+            return c
+        }
+    }
+    return c // 若没有这样的素数，返回n（实用中不能如此简化处理）
+}
+
+export function hashCode<T>(c: T | string[]) {
+    if (typeof c === 'string') {
+        return c.charCodeAt(0)
+    }
+    if (typeof c === 'number') {
+        return c <= MAX_INT ? MAX_INT : MAX_INT + (c >> 32)
+    }
+    // 生成字符串的循环移位散列码（cyclic shift hash code）
+    if (c instanceof Array) {
+        let h = 0 // 散列码
+        // 自左向右，逐个处理每一字符
+        for (let n = c.length, i = 0; i < n; i++) {
+            // 散列码循环左移5位，再累加当前字符
+            h = (h << 5) | (h >> 27)
+            h += c[i].charCodeAt(0)
+        }
+        return h // 如此所得的散列码，实际上可理解为近似的“多项式散列码”
+    }
 }

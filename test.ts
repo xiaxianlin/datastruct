@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import List from './struct/list'
 import { insertionSort, selectionSort } from './algorithm/sort'
 import { convert, evaluate, labyrinth, paren, placeQueens } from './algorithm/stack'
@@ -12,6 +14,10 @@ import Vector from './struct/vector'
 import BTree from './struct/btree'
 import RedBlackTree from './struct/red_black_tree'
 import SkipList from './struct/skip_list'
+import { fibSearch } from './algorithm/search'
+import Bitmap from './struct/bitmap'
+import { primeNLT } from './common/util'
+import HashTable from './struct/hashtable'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -402,9 +408,25 @@ function testSkipList() {
     console.log(list.get(12))
 }
 
+function testBitmap() {
+    let file = path.resolve('./assets/prime-1048576-bitmap.txt')
+    let c = primeNLT(0, 2000, file)
+    console.log(c)
+}
+
+function testHashtable() {
+    let ht = new HashTable<number, string>()
+    ht.put(123, 'abc')
+    console.log(ht.get(123))
+    ht.remove(123)
+    console.log(ht.get(123))
+}
+
 // testBST()
 // testAVL()
 // testSplay()
 // testRedBlackTree()
 
-testSkipList()
+// testSkipList()
+
+testHashtable()
