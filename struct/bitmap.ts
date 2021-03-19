@@ -1,9 +1,4 @@
 import * as fs from 'fs'
-// 0x80 -> 128
-// 0x70 -> 112
-// x >> y -> Math.floor(x / (2 ^ y))
-// 0x80 >> (k & 0x70) 当Math.ceil((k+1)/16)为奇数时=128，为偶数=0，K>=0
-// k | 128 = k + 128, k | 0 = 0
 class Bitmap {
     private _M: Array<number>
     private _N: number

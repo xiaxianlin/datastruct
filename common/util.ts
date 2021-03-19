@@ -63,7 +63,7 @@ export function max(arr: number[]) {
     return max
 }
 
-function arrayFill(n: number, s: string) {
+export function arrayFill<T>(n: number, s: T) {
     let a = []
     while (-1 < n) a[--n] = s
     return a

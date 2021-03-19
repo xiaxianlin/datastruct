@@ -19,6 +19,7 @@ import Bitmap from './struct/bitmap'
 import { primeNLT, rand } from './common/util'
 import HashTable from './struct/hashtable'
 import { testPfcCode } from './algorithm/pfc'
+import { testHuffmanCode } from './algorithm/huffman'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -430,4 +431,6 @@ function testHashtable() {
 
 // testSkipList()
 
-testPfcCode('message')
+// testPfcCode('message')
+
+testHuffmanCode('message')
