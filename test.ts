@@ -434,6 +434,13 @@ function testCompleteHeap() {
     console.log(heap.getElements())
 }
 
+function testLeftHeap() {
+    let T = [2, 1, 6, 3, 9, 7, 4, 8, 5]
+    console.log(T)
+    let heap = new PQ.LeftHeap(T)
+    heap.print()
+}
+
 // testBST()
 // testAVL()
 // testSplay()
@@ -445,4 +452,4 @@ function testCompleteHeap() {
 
 // testHuffmanCode('message')
 
-testCompleteHeap()
+testLeftHeap()

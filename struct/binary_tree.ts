@@ -216,7 +216,6 @@ class BinTree<T> {
         }
     }
 
-    constructor() {}
     // 获取规模
     size() {
         return this._size
