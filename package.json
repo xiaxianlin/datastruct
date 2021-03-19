@@ -1,23 +1,23 @@
 {
-  "name": "data",
-  "version": "1.0.0",
-  "description": "data-algorithm",
-  "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/node": "^14.14.35"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xiaxianlin/data-algorithm.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/xiaxianlin/data-algorithm/issues"
-  },
-  "homepage": "https://github.com/xiaxianlin/data-algorithm#readme"
+    "name": "data",
+    "version": "1.0.0",
+    "description": "data-algorithm",
+    "main": "index.js",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^14.14.35"
+    },
+    "scripts": {
+        "test": "ts-node ./test.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xiaxianlin/data-algorithm.git"
+    },
+    "author": "Tiny",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/xiaxianlin/data-algorithm/issues"
+    },
+    "homepage": "https://github.com/xiaxianlin/data-algorithm#readme"
 }

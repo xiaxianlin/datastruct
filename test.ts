@@ -20,6 +20,7 @@ import { primeNLT, rand } from './common/util'
 import HashTable from './struct/hashtable'
 import { testPfcCode } from './algorithm/pfc'
 import { testHuffmanCode } from './algorithm/huffman'
+import PQ from './struct/priority_queue'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -424,6 +425,15 @@ function testHashtable() {
     console.log(ht.get(123))
 }
 
+function testCompleteHeap() {
+    let T = [2, 1, 6, 3, 9, 7, 4, 8, 5]
+    console.log(T)
+    let heap = new PQ.CompleteHead(T)
+    console.log(heap.getElements())
+    heap.sort()
+    console.log(heap.getElements())
+}
+
 // testBST()
 // testAVL()
 // testSplay()
@@ -433,4 +443,6 @@ function testHashtable() {
 
 // testPfcCode('message')
 
-testHuffmanCode('message')
+// testHuffmanCode('message')
+
+testCompleteHeap()

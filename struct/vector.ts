@@ -7,17 +7,17 @@ const { random, floor } = Math
 const DEFAULT_CAPACTIY = 10
 
 class Vector<T> {
-    private _size = 0
-    private _capactiy = DEFAULT_CAPACTIY
-    private _elem: T[] = []
+    protected _size = 0
+    protected _capactiy = DEFAULT_CAPACTIY
+    protected _elem: T[] = []
 
-    private assertOutOfBounds(r: Rank, method: string = 'any') {
+    protected assertOutOfBounds(r: Rank, method: string = 'any') {
         if (r < 0 || r > this._size) {
             throw `[${method}]: Vector rank [${r}] out of bounds.`
         }
     }
 
-    private assertSectionRank(lo: Rank, hi: Rank, method: string = 'any') {
+    protected assertSectionRank(lo: Rank, hi: Rank, method: string = 'any') {
         this.assertOutOfBounds(lo, method)
         this.assertOutOfBounds(hi, method)
         if (lo >= hi) {
@@ -26,7 +26,7 @@ class Vector<T> {
     }
 
     // 复制向量
-    private copyFrom(A: Vector<T> | Array<T>, lo: Rank, hi: Rank) {
+    protected copyFrom(A: Vector<T> | Array<T>, lo: Rank, hi: Rank) {
         this._elem = new Array((this._capactiy = 2 * (hi - lo)))
         this._size = 0
         while (lo < hi) {
@@ -35,7 +35,7 @@ class Vector<T> {
     }
 
     // 扩容
-    private expand() {
+    protected expand() {
         // 尚未满员时，不必扩容
         if (this._size < this._capactiy) return
         // 不低于最小容量
@@ -48,7 +48,7 @@ class Vector<T> {
     }
 
     // 压缩
-    private shrink() {
+    protected shrink() {
         // 不要收缩到DEFAULT_CAPACTIY以下
         if (this._capactiy < DEFAULT_CAPACTIY << 1) return
         // 以25%为界
@@ -90,31 +90,6 @@ class Vector<T> {
         if (a1 instanceof Vector && typeof a2 === 'number' && typeof a3 === 'number') {
             this.copyFrom(a1, Math.floor(a2), Math.floor(a3))
         }
-
-        // return new Proxy(this, {
-        //     get(target, prop) {
-        //         if (/\d+/.test(prop as string)) {
-        //             return target.get(prop as number)
-        //         } else {
-        //             return target[prop]
-        //         }
-        //     },
-        //     set(target, prop, value) {
-        //         if (/\d+/.test(prop as string)) {
-        //             let r = prop as number
-        //             r < target._size ? target.put(prop as number, value) : target.insertAt(r, value)
-        //         } else {
-        //             target[prop] = value
-        //         }
-        //         return true
-        //     }
-        // })
-    }
-
-    protected add(e: T) {
-        this.expand()
-        this._elem[this._size] = e
-        this._size++
     }
 
     // 打印使用
@@ -257,6 +232,10 @@ class Vector<T> {
     // 遍历
     traverse(visit: (e: T) => void) {
         for (let i = 0; i < this._size; i++) visit(this._elem[i])
+    }
+
+    getElements() {
+        return this._elem
     }
 }
 
