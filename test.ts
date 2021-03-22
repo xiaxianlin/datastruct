@@ -21,6 +21,7 @@ import HashTable from './struct/hashtable'
 import { testPfcCode } from './algorithm/pfc'
 import { testHuffmanCode } from './algorithm/huffman'
 import PQ from './struct/priority_queue'
+import { bm, bruteForceMatch1, bruteForceMatch2, karpRabin, kmp } from './algorithm/string'
 
 const data = [1, 7, 3, 8, 5, 6, 55, 20]
 
@@ -441,6 +442,27 @@ function testLeftHeap() {
     heap.print()
 }
 
+function testString() {
+    let T = 'abcdefghijk'
+    let P = 'ij'
+    let index: number
+
+    // index = bruteForceMatch1(P, T)
+    // console.log('bruteForceMatch1', index)
+
+    // index = bruteForceMatch2(P, T)
+    // console.log('bruteForceMatch2', index)
+
+    // index = kmp(P, T)
+    // console.log('kmp', index)
+
+    // index = bm(P, T)
+    // console.log('bm', index)
+
+    index = karpRabin(P, T)
+    console.log('karpRabin', index)
+}
+
 // testBST()
 // testAVL()
 // testSplay()
@@ -452,4 +474,4 @@ function testLeftHeap() {
 
 // testHuffmanCode('message')
 
-testLeftHeap()
+testString()

@@ -32,3 +32,5 @@ export enum Direction {
 }
 
 export const MAX_INT = 2147483647
+
+export const UNIT_MAX = 4294967295
