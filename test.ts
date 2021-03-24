@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import List from './struct/list'
-import { insertionSort, selectionSort } from './algorithm/sort'
+import { insertionSort, mergeSort, quickSort, selectionSort, shellSort } from './algorithm/sort'
 import { convert, evaluate, labyrinth, paren, placeQueens } from './algorithm/stack'
 import { fib } from './algorithm/other'
 import { displayLaby, randLaby } from './utils/laby'
@@ -14,7 +14,7 @@ import Vector from './struct/vector'
 import BTree from './struct/btree'
 import RedBlackTree from './struct/red_black_tree'
 import SkipList from './struct/skip_list'
-import { fibSearch } from './algorithm/search'
+import { fibSearch, quickSelect } from './algorithm/search'
 import Bitmap from './struct/bitmap'
 import { primeNLT, rand } from './common/util'
 import HashTable from './struct/hashtable'
@@ -22,8 +22,9 @@ import { testPfcCode } from './algorithm/pfc'
 import { testHuffmanCode } from './algorithm/huffman'
 import PQ from './struct/priority_queue'
 import { bm, bruteForceMatch1, bruteForceMatch2, karpRabin, kmp } from './algorithm/string'
+import { knuthSequence, papernovStasevicSequence, prattSequence, sedgewickSequence } from './algorithm/sequence'
 
-const data = [1, 7, 3, 8, 5, 6, 55, 20]
+const data = [123, 17, 3, 28, 45, 16, 10, 55, 20, 100, 298, 176]
 
 function testListSort() {
     let list = new List<number>(data)
@@ -31,16 +32,6 @@ function testListSort() {
     list.traverse((item: number) => {
         console.log('list', item)
     })
-}
-
-function testInsertionSort() {
-    insertionSort(data)
-    console.log(data)
-}
-
-function testSelectionSort() {
-    selectionSort(data)
-    console.log(data)
 }
 
 function testConvert() {
@@ -463,6 +454,32 @@ function testString() {
     console.log('karpRabin', index)
 }
 
+function testSort() {
+    console.log('before sort:', data)
+    // insertionSort(data)
+    // selectionSort(data)
+    // mergeSort(data, 0, data.length)
+    // quickSort(data, 0, data.length)
+    shellSort(data, knuthSequence)
+    console.log('after sort:', data)
+    // console.log('use time:', time, 'ms')
+}
+
+function testKSelect() {
+    quickSelect(data, 10)
+    console.log(data[10])
+    console.log(data)
+}
+
+function testSqueue() {
+    let max = 1000
+    // let seq = prattSequence(max)
+    // let seq = knuthSequence(max)
+    // let seq = sedgewickSequence(max)
+    let seq = papernovStasevicSequence(max)
+    console.log(seq)
+}
+
 // testBST()
 // testAVL()
 // testSplay()
@@ -474,4 +491,4 @@ function testString() {
 
 // testHuffmanCode('message')
 
-testString()
+testSort()
