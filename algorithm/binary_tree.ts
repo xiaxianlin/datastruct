@@ -1,5 +1,5 @@
 import { VST } from '../common/types'
-import { BinNode } from '../struct/binary_tree'
+import BinTree, { BinNode } from '../struct/binary_tree'
 import Stack from '../struct/stack'
 import Queue from '../struct/queue'
 // 从当前节点出发，沿左分支不断深入，直到没有左分支的节点；沿途节点遇到后立即访问
