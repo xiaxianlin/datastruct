@@ -136,7 +136,6 @@ namespace PQ {
         // 更新父子关系
         a.rc.parent = a
         // 若有必要，交换a的左、右子堆，以确保右子堆的npl不大
-
         if (!a.lc || a.lc.npl < a.rc.npl) {
             if (!a.lc) {
                 a.lc = a.rc

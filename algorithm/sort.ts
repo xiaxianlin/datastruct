@@ -67,26 +67,7 @@ export function selectionSort<T>(A: T[]) {
     }
 }
 
-function partition1<T>(A: T[], lo: number, hi: number) {
-    swap(A, lo, lo + rand(hi - lo)) // 随机交换首元素，使轴点随机
-    let pivot = A[lo] // 以首元素为轴
-    // 从数组的两端交替向中间扫描
-    while (lo < hi) {
-        // 在不小于pivot的前提下，向左拓展右端子数组
-        while (lo < hi && pivot <= A[hi]) hi--
-        // 小于pivot者归入左侧子序列
-        A[lo] = A[hi]
-        // 在不大于pivot的前提下，向右拓展左端子数组
-        while (lo < hi && pivot >= A[lo]) lo++
-        // 大于pivot者归入右侧子序列
-        A[hi] = A[lo]
-    }
-    // 将备份的轴点记录置于前、后数组之间
-    A[lo] = pivot
-    return lo
-}
-
-function partition2<T>(A: T[], lo: number, hi: number) {
+function partition<T>(A: T[], lo: number, hi: number) {
     swap(A, lo, lo + rand(hi - lo)) // 随机交换首元素，使轴点随机
     let pivot = A[lo] // 以首元素为轴
     // 从数组的两端交替向中间扫描
@@ -107,7 +88,7 @@ function partition2<T>(A: T[], lo: number, hi: number) {
 
 export function quickSort<T>(A: T[], lo: number, hi: number) {
     if (hi - lo < 2) return
-    let mi = partition2(A, lo, hi - 1) // 构造轴点
+    let mi = partition(A, lo, hi - 1) // 构造轴点
     quickSort(A, lo, mi) // 对前缀递归排序
     quickSort(A, mi + 1, hi) // 对后缀递归排序
 }
@@ -131,7 +112,6 @@ export function shellSort<T>(A: T[], generator: (max: number) => number[]) {
     let i: number, j: number
     for (let k = seq.length - 1; k >= 0; k--) {
         let d = seq[k]
-        console.log(d)
         for (i = d; i < A.length; i++) {
             let x = A[i]
             for (j = i; j >= d && A[j - d] > x; j -= d) A[j] = A[j - d]
@@ -139,3 +119,5 @@ export function shellSort<T>(A: T[], generator: (max: number) => number[]) {
         }
     }
 }
+
+export function bucketSort<T>(A: T[]) {}
