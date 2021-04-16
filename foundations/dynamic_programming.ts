@@ -1,27 +1,49 @@
-function bin(n: number, k: number) {
-    if (k === 0 || n === k) {
-        return 1
-    } else {
-        return bin(n - 1, k - 1) + bin(n - 1, k)
-    }
-}
+import { createMatrix } from '../utils/matrix'
 
-function bin2(n: number, k: number) {
-    let i: number, j: number
-    let B: number[][] = []
-    for (i = 0; i <= n; i++) {
-        B[i] = []
-        for (j = 0; j <= Math.min(i, k); j++) {
-            if (j === 0 || j === i) {
-                B[i][j] = 1
-            } else {
-                B[i][j] = B[i - 1][j - 1] + B[i - 1][j]
-            }
+const findMinIndex = (data: number[]) => {
+    let index = 0
+    let poivt = data[0]
+    for (let i = 1; i < data.length; i++) {
+        if (data[i] < poivt) {
+            poivt = data[i]
+            index = i
         }
     }
-    return B[n][k]
+    return index
 }
 
+/**
+ * 二项式系数问题
+ */
+export function binomialTheorem() {
+    function bin(n: number, k: number) {
+        if (k === 0 || n === k) {
+            return 1
+        } else {
+            return bin(n - 1, k - 1) + bin(n - 1, k)
+        }
+    }
+
+    function bin2(n: number, k: number) {
+        let i: number, j: number
+        let B: number[][] = []
+        for (i = 0; i <= n; i++) {
+            B[i] = []
+            for (j = 0; j <= Math.min(i, k); j++) {
+                if (j === 0 || j === i) {
+                    B[i][j] = 1
+                } else {
+                    B[i][j] = B[i - 1][j - 1] + B[i - 1][j]
+                }
+            }
+        }
+        return B[n][k]
+    }
+}
+
+/**
+ * 最短路径问题
+ */
 export function floyd() {
     let n = 5
     const createGraph = () => {
@@ -111,19 +133,10 @@ export function floyd() {
     printPath(P, 2, 1)
 }
 
+/**
+ * 矩阵相乘链问题
+ */
 export function matrixMultChain() {
-    const findMinIndex = (data: number[]) => {
-        let index = 0
-        let poivt = data[0]
-        for (let i = 1; i < data.length; i++) {
-            if (data[i] < poivt) {
-                poivt = data[i]
-                index = i
-            }
-        }
-        return index
-    }
-
     const minimum = (i: number, j: number, d: number[], M: number[][]) => {
         let values: number[] = []
         let s = d[i - 1] || 1
@@ -132,9 +145,8 @@ export function matrixMultChain() {
         }
         return { min: Math.min(...values), k: i + findMinIndex(values) }
     }
-
     const minmult = (n: number, d: number[], P: number[][]) => {
-        let i: number, j: number, k: number, diagonal: number
+        let i: number, j: number, diagonal: number
         let M: number[][] = []
         for (i = 0; i < n; i++) {
             M[i] = []
@@ -175,3 +187,191 @@ export function matrixMultChain() {
     console.log(P)
     console.log(order(0, n - 1))
 }
+
+/**
+ * 最优二叉查找树
+ */
+export function binSearch() {
+    class NodeType<T> {
+        key: T
+        left: NodeType<T> | null = null
+        right: NodeType<T> | null = null
+    }
+
+    const search = <T extends unknown>(tree: NodeType<T>, keyin: T) => {
+        let found: boolean
+        let p = tree
+        found = false
+        while (!found) {
+            if (p.key === keyin) {
+                found = true
+            } else if (keyin < p.key) {
+                p = p.left
+            } else {
+                p = p.right
+            }
+        }
+        return p
+    }
+
+    const minimum = (i: number, j: number, p: number[], A: number[][]) => {
+        let values: number[] = []
+        let total = 0
+        for (let k = i; k <= j; k++) {
+            total += p[k - 1]
+            values.push(A[i][k - 1] + A[k + 1][j])
+        }
+        return { min: Math.min(...values) + total, k: i + findMinIndex(values) }
+    }
+
+    const optSearchTree = (n: number, p: number[], R: number[][]) => {
+        let i: number, j: number, diagonal: number
+        let A: number[][] = createMatrix(n + 2, n + 2)
+        for (i = 1; i <= n; i++) {
+            A[i][i] = p[i - 1]
+            R[i][i] = i
+        }
+        for (diagonal = 1; diagonal < n; diagonal++) {
+            for (i = 1; i <= n - diagonal; i++) {
+                j = i + diagonal
+                let { min, k } = minimum(i, j, p, A)
+                A[i][j] = min
+                R[i][j] = k
+            }
+        }
+        console.log(A)
+        return A[1][n - 1]
+    }
+
+    const tree = (i: number, j: number, keys: string[], R: number[][]) => {
+        let k: number, p: NodeType<string>
+        k = R[i][j]
+        if (k === 0) {
+            return null
+        } else {
+            p = new NodeType()
+            p.key = keys[k - 1]
+            p.left = tree(i, k - 1, keys, R)
+            p.right = tree(k + 1, j, keys, R)
+            return p
+        }
+    }
+
+    let n = 4
+    let keys = ['Don', 'Isabelle', 'Ralph', 'Wally']
+    let p = [3 / 8, 3 / 8, 1 / 8, 1 / 8]
+    let R: number[][] = createMatrix(n + 2, n + 2)
+    optSearchTree(n, p, R)
+    console.log(R)
+    let root = tree(1, n, keys, R)
+    console.log(root)
+}
+
+/**
+ * 旅行推销员问题
+ */
+export function tour() {
+    const minimum = (i: number, A: number[], W: number[][], D: Map<number, Map<string, number>>) => {
+        let values: number[] = []
+        for (let k = 0; k < A.length; k++) {
+            let j = A[k]
+            let v = A.filter((a) => a !== j)
+            values.push(W[i][j - 1] + D.get(j).get(v.join('')) || 0)
+        }
+        let minIndex = findMinIndex(values)
+        return { min: Math.min(...values), k: A[minIndex] }
+    }
+
+    const subsets = (k: number, V: number[]) => {
+        let data: number[][][] = []
+        for (let i = 0; i < k; i++) {
+            data[i] = []
+            if (i === 0) {
+                data[0] = V.map((vi) => [vi])
+            } else {
+                // 上一轮子集作为基
+                let base: number[][] = data[i - 1]
+                base.forEach((b: number[], j: number) => {
+                    // 将最后一个元素索引作为起始进行累加
+                    for (let m = b[b.length - 1] - 1; m < V.length; m++) {
+                    // for (let m = b.length + j; m < V.length; m++) {
+                        data[i].push(b.concat(V[m]))
+                    }
+                })
+            }
+        }
+        return data
+    }
+
+    const travel = (n: number, V: number[], W: number[][], P: Map<number, Map<string, number>>) => {
+        let i: number, j: number, k: number, s: number
+        let D: Map<number, Map<string, number>> = new Map()
+        // 初始i->1的路线长度
+        for (i = 0; i < n; i++) {
+            D.set(i + 1, new Map())
+            P.set(i + 1, new Map())
+            if (i > 0) {
+                D.get(i + 1).set('', W[i][0])
+            }
+        }
+
+        let subsetData = subsets(n - 2, V.slice(1))
+
+        //  中间路径个数
+        for (k = 1; k <= n - 2; k++) {
+            // 获取长度为k的子集
+            let As = subsetData[k - 1]
+            // 从vi开始出发
+            for (i = 1; i < n; i++) {
+                for (s = 0; s < As.length; s++) {
+                    let A = As[s]
+                    if (!A.includes(i + 1)) {
+                        let { min, k } = minimum(i, A, W, D)
+                        let path = A.join('')
+                        D.get(i + 1).set(path, min)
+                        P.get(i + 1).set(path, k)
+                    }
+                }
+            }
+        }
+        let A = V.slice(1)
+        let { min, k: m } = minimum(0, A, W, D)
+        D.get(1).set(A.join(''), min)
+        P.get(1).set(A.join(''), m)
+        // console.log(D)
+        return min
+    }
+
+    const drawPath = (index: number, V: number[], P: Map<number, Map<string, number>>, paths: number[]) => {
+        if (!V.length) return
+        let vi = P.get(index).get(V.join(''))
+        paths.push(vi)
+        drawPath(
+            vi,
+            V.filter((i) => i !== vi),
+            P,
+            paths
+        )
+    }
+
+    let n = 5
+    let V = [1, 2, 3, 4, 5]
+    let W = [
+        [0, 2, 9, Infinity, 2],
+        [1, 0, 6, 4, Infinity],
+        [Infinity, 7, 0, 8, Infinity],
+        [6, 3, Infinity, 0, Infinity],
+        [Infinity, 3, Infinity, 9, 0]
+    ]
+    let P: Map<number, Map<string, number>> = new Map()
+    let paths = []
+
+    console.log(W)
+    let len = travel(n, V, W, P)
+    // console.log(P)
+    drawPath(1, V.slice(1), P, paths)
+    console.log('v1->' + paths.map((p) => 'v' + p).join('->') + '->v1：', len)
+
+    // console.log(subsets(n - 2, V.slice(1)))
+}
+// 

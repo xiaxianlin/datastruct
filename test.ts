@@ -1,5 +1,5 @@
 import { Matrix2Mult, strassen } from './foundations/divid_conquer'
-import { floyd, matrixMultChain } from './foundations/dynamic_programming'
+import { binSearch, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
 import { createMatrix } from './utils/matrix'
 
 let A = [
@@ -32,4 +32,8 @@ let B = [
 
 // floyd()
 
-matrixMultChain()
+// matrixMultChain()
+
+// binSearch()
+
+tour()
