@@ -294,7 +294,7 @@ export function tour() {
                 base.forEach((b: number[], j: number) => {
                     // 将最后一个元素索引作为起始进行累加
                     for (let m = b[b.length - 1] - 1; m < V.length; m++) {
-                    // for (let m = b.length + j; m < V.length; m++) {
+                        // for (let m = b.length + j; m < V.length; m++) {
                         data[i].push(b.concat(V[m]))
                     }
                 })
@@ -374,4 +374,87 @@ export function tour() {
 
     // console.log(subsets(n - 2, V.slice(1)))
 }
-// 
+
+export function dnaSeqAlign() {
+    const opt = (i: number, j: number, m: number, n: number, penalty: number, W: number[][]) => {
+        let value = 0
+        if (i === m) {
+            value = 2 * (n - j)
+        } else if (j === n) {
+            value = 2 * (m - i)
+        } else {
+            value = Math.min(W[i + 1][j + 1] + penalty, W[i + 1][j] + 2, W[i][j + 1] + 2)
+        }
+        return value
+    }
+
+    const diagonalBuild = (sx: string[], sy: string[], W: number[][]) => {
+        let m = sx.length
+        let n = sy.length
+
+        for (let k = 1; k <= m + n; k++) {
+            for (let g = 0; g <= k; g++) {
+                let i = m - g
+                let j = n - k + g
+                if (i > -1 && j > -1) {
+                    let penalty = sx[i] === sy[j] ? 0 : 1
+                    W[i][j] = opt(i, j, m, n, penalty, W)
+                }
+            }
+        }
+    }
+
+    const immediateBuild = (sx: string[], sy: string[], W: number[][]) => {
+        let m = sx.length
+        let n = sy.length
+        for (let i = 0; i < m; i++) W[i][n] = 2 * (m - i)
+        for (let j = 0; j < n; j++) W[m][j] = 2 * (n - j)
+
+        for (let i = m - 1; i > -1; i--) {
+            for (let j = n - 1; j > -1; j--) {
+                let penalty = sx[i] === sy[j] ? 0 : 1
+                W[i][j] = Math.min(W[i + 1][j + 1] + penalty, W[i + 1][j] + 2, W[i][j + 1] + 2)
+            }
+        }
+    }
+
+    const path = (i: number, j: number, sx: string[], sy: string[], px: string[], py: string[], W: number[][]) => {
+        let cur = W[i][j]
+        let penalty = sx[i] === sy[j] ? 0 : 1
+        if (i >= sx.length && j >= sy.length) return
+        // 右移
+        if (W[i][j + 1] + 2 === cur) {
+            px.push('-')
+            py.push(sy[j])
+            path(i, j + 1, sx, sy, px, py, W)
+        }
+        // 下移
+        else if (W[i + 1][j] + 2 === cur) {
+            px.push(sx[i])
+            py.push('-')
+            path(i + 1, j, sx, sy, px, py, W)
+        }
+        // 斜下移动
+        else if (W[i + 1][j + 1] + penalty === cur) {
+            px.push(sx[i])
+            py.push(sy[j])
+            path(i + 1, j + 1, sx, sy, px, py, W)
+        }
+    }
+
+    let sx = ['A', 'A', 'C', 'A', 'G', 'T', 'T', 'A', 'C', 'C']
+    let sy = ['T', 'A', 'A', 'G', 'G', 'T', 'C', 'A']
+
+    let px: string[] = []
+    let py: string[] = []
+
+    let W = createMatrix(sx.length + 1, sy.length + 1)
+
+    immediateBuild(sx, sy, W)
+
+    path(0, 0, sx, sy, px, py, W)
+
+    console.table(W)
+    console.log(px.join(''))
+    console.log(py.join(''))
+}

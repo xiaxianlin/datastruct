@@ -1,5 +1,5 @@
 import { Matrix2Mult, strassen } from './foundations/divid_conquer'
-import { binSearch, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
+import { binSearch, dnaSeqAlign, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
 import { createMatrix } from './utils/matrix'
 
 let A = [
@@ -36,4 +36,6 @@ let B = [
 
 // binSearch()
 
-tour()
+// tour()
+
+dnaSeqAlign()
