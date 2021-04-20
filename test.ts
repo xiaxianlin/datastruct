@@ -1,5 +1,6 @@
 import { Matrix2Mult, strassen } from './foundations/divid_conquer'
 import { binSearch, dnaSeqAlign, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
+import { minSpanningTree, shortestPath } from './foundations/greedy'
 import { createMatrix } from './utils/matrix'
 
 let A = [
@@ -38,4 +39,8 @@ let B = [
 
 // tour()
 
-dnaSeqAlign()
+// dnaSeqAlign()
+
+// minSpanningTree()
+
+shortestPath()
