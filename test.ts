@@ -4,9 +4,11 @@ import {
     createPlaceQueenResolve,
     createSumOfSubsetsResolve
 } from './foundations/backtracking'
+import { createKnapsackResolve2, createKnapsackResolve3, createTravelResolve } from './foundations/branch_bound'
 import { Matrix2Mult, strassen } from './foundations/divid_conquer'
 import { binSearch, dnaSeqAlign, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
 import { minSpanningTree, shortestPath } from './foundations/greedy'
+import PQ from './struct/priority_queue'
 import { createMatrix } from './utils/matrix'
 
 let A = [
@@ -57,4 +59,8 @@ let B = [
 
 // createMColoringResolve(4, ['Red', 'Green', 'Blue', 'Yellow'])()
 
-createKnapsackResolve(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
+// createKnapsackResolve(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
+// createKnapsackResolve2(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
+// createKnapsackResolve3(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
+
+createTravelResolve()()

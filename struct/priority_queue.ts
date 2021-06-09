@@ -5,6 +5,7 @@ import IPriorityQueue from '../interface/priority_queue'
 import BinTree, { BinNode } from './binary_tree'
 import Vector from './vector'
 namespace PQ {
+    type ComapreFn<T> = (a: T, b: T) => boolean
     // 判断PQ[i]是否合法
     const InHeap = (n: number, i: number) => -1 < i && i < n
     // PQ[i]的父节点（floor((i-1)/2)，i无论正负）
@@ -16,19 +17,21 @@ namespace PQ {
     // PQ[i]的右子节点
     const RChild = (i: number) => (1 + i) << 1
     // 判断PQ[i]是否有父节点
-    const ParentVilid = (i: number) => i < 1
+    const ParentVilid = (i: number) => 0 < i
     // 判断PQ[i]是否有一个（左）子节点
     const LChildValid = (n: number, i: number) => InHeap(n, LChild(i))
     // 判断PQ[i]是否有两个子节点
     const RChildValid = (n: number, i: number) => InHeap(n, RChild(i))
     // 取大着（等时前者优先）
-    const Bigger = <T extends unknown>(PQ: T[], i: number, j: number) => (PQ[i] < PQ[j] ? j : i)
+    const Bigger = <T extends unknown>(PQ: T[], i: number, j: number, comapreFn: ComapreFn<T>) => {
+        return comapreFn(PQ[i], PQ[j]) ? i : j
+    }
     // 父子（至多）三者中最大者，相等时父节点优先，可避免不必要的交换
-    const ProperParent = <T extends unknown>(PQ: T[], n: number, i: number) => {
+    const ProperParent = <T extends unknown>(PQ: T[], n: number, i: number, comapreFn: ComapreFn<T>) => {
         if (RChildValid(n, i)) {
-            return Bigger(PQ, Bigger(PQ, i, LChild(i)), RChild(i))
+            return Bigger(PQ, Bigger(PQ, i, LChild(i), comapreFn), RChild(i), comapreFn)
         } else {
-            return LChildValid(n, i) ? Bigger(PQ, i, LChild(i)) : i
+            return LChildValid(n, i) ? Bigger(PQ, i, LChild(i), comapreFn) : i
         }
     }
 
@@ -36,10 +39,15 @@ namespace PQ {
      * 完全二叉堆
      */
     export class CompleteHead<T> extends Vector<T> implements IPriorityQueue<T> {
+        private comapreFn = (a: T, b: T) => a > b
         // 下滤
         protected percolateDown(n: number, i: number) {
+            if (n === 0) {
+                this._elem = []
+                return i
+            }
             let j: number
-            while (i != (j = ProperParent(this._elem, n, i))) {
+            while (i != (j = ProperParent(this._elem, n, i, this.comapreFn))) {
                 swap(this._elem, i, j)
                 i = j
             }
@@ -52,7 +60,7 @@ namespace PQ {
                 // 将i之父标记为j
                 let j = Parent(i)
                 // 一旦当前父子不再逆序，上滤旋即完成
-                if (this._elem[i] < this._elem[j]) break
+                if (!this.comapreFn(this._elem[i], this._elem[j])) break
                 // 否则，父子交换位置，并继续考查上一层
                 swap(this._elem, i, j)
                 i = j
@@ -73,6 +81,9 @@ namespace PQ {
                 this.heapify(n || A.length)
             }
         }
+        setCompareFn(fn: ComapreFn<T>) {
+            this.comapreFn = fn
+        }
         // 按照比较器确定的优先级次序，插入词条
         insert(e: T) {
             // 首先将新词条接至向量末尾
@@ -88,7 +99,9 @@ namespace PQ {
         delMax(): T {
             // 摘除堆顶（首词条），代之末词条
             let maxElem = this._elem[0]
-            this._elem[0] = this._elem[--this._size]
+            let last = this._elem[this._size - 1]
+            this.remove(this._size - 1)
+            this._elem[0] = last
             // 对新堆顶实施下滤
             this.percolateDown(this._size, 0)
             // 返回此前备份的最大词条
@@ -125,14 +138,14 @@ namespace PQ {
         return a
     }
 
-    const merge = <T extends unknown>(a: BinNode<T>, b: BinNode<T>) => {
+    const merge = <T extends unknown>(a: BinNode<T>, b: BinNode<T>, compareFn: (a: T, b: T) => boolean) => {
         // 退化情况
         if (!a) return b
         if (!b) return a
         // 一般情况：确保b不大
-        if (a.data < b.data) swapBinNode(a, b)
+        if (compareFn(a.data, b.data)) swapBinNode(a, b)
         // 将a的右子堆与b合并
-        a.rc = merge(a.rc, b)
+        a.rc = merge(a.rc, b, compareFn)
         // 更新父子关系
         a.rc.parent = a
         // 若有必要，交换a的左、右子堆，以确保右子堆的npl不大
@@ -151,15 +164,19 @@ namespace PQ {
     }
 
     export class LeftHeap<T> extends BinTree<T> implements IPriorityQueue<T> {
-        constructor(E?: T[]) {
+        private compareFn = (a: T, b: T) => a < b
+        constructor(E?: T[] | ComapreFn<T>) {
             super()
             if (E instanceof Array) {
                 for (let i = 0; i < E.length; i++) this.insert(E[i])
             }
+            if (typeof E === 'function') {
+                this.compareFn = E
+            }
         }
         insert(e: T): void {
             let v = new BinNode<T>(e)
-            this._root = merge(this._root, v)
+            this._root = merge(this._root, v, this.compareFn)
             this._root.parent = null
             this._size++
         }
@@ -171,7 +188,7 @@ namespace PQ {
             let rHeap = this._root.rc
             let e = this._root.data
             this._size--
-            this._root = merge(lHeap, rHeap)
+            this._root = merge(lHeap, rHeap, this.compareFn)
             if (this._root) this._root.parent = null
             return e
         }

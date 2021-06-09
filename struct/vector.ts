@@ -113,12 +113,16 @@ class Vector<T> {
     insertAt(r: Rank, e: T) {
         this.expand()
         this._size++
-        for (let i = this._size; i > r; i--) this._elem[i] = this._elem[i - 1]
+        for (let i = this._size; i > r; i--) {
+            this._elem[i] = this._elem[i - 1]
+        }
         this._elem[r] = e
     }
 
     insert(e: T) {
-        this.insertAt(this._size, e)
+        this.expand()
+        this._elem[this._size] = e
+        this._size++
     }
     // 删除指定位置的元素
     remove(r: Rank) {
