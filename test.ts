@@ -1,66 +1,9 @@
-import {
-    createKnapsackResolve,
-    createMColoringResolve,
-    createPlaceQueenResolve,
-    createSumOfSubsetsResolve
-} from './foundations/backtracking'
-import { createKnapsackResolve2, createKnapsackResolve3, createTravelResolve } from './foundations/branch_bound'
-import { Matrix2Mult, strassen } from './foundations/divid_conquer'
-import { binSearch, dnaSeqAlign, floyd, matrixMultChain, tour } from './foundations/dynamic_programming'
-import { minSpanningTree, shortestPath } from './foundations/greedy'
-import PQ from './struct/priority_queue'
-import { createMatrix } from './utils/matrix'
+import Sort from './foundations/sort'
 
-let A = [
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8]
-]
+const S = [72, 23, 4, 85, 37, 19, 27, 66, 10, 50, 13, 22, 15, 33, 62, 88, 30, 39, 21, 37, 4]
+const S2 = [72, 23, 85, 37, 19, 27, 66, 10, 50, 13, 22, 15, 33, 62, 88, 30, 39, 21]
 
-let B = [
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8],
-    [1, 2, 3, 4, 5, 6, 7, 8]
-]
-
-// let C = strassen(A, B)
-// console.log(C)
-
-// let R = cutMatrix(2, A)
-// console.log(...R)
-
-// floyd()
-
-// matrixMultChain()
-
-// binSearch()
-
-// tour()
-
-// dnaSeqAlign()
-
-// minSpanningTree()
-
-// shortestPath()
-
-// createPlaceQueenResolve(8)()
-
-// createSumOfSubsetsResolve(13, [0, 3, 4, 5, 6])()
-
-// createMColoringResolve(4, ['Red', 'Green', 'Blue', 'Yellow'])()
-
-// createKnapsackResolve(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
-// createKnapsackResolve2(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
-// createKnapsackResolve3(4, 16, [2, 5, 10, 5], [40, 30, 50, 10])()
-
-createTravelResolve()()
+console.log('before:', S)
+// Sort.heap(S)
+Sort.radix(S2)
+console.log('after:', S)
